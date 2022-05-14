@@ -3,6 +3,7 @@ package sec1
 import (
 	"errors"
 	"fmt"
+	"time"
 )
 
 var (
@@ -125,4 +126,121 @@ func Practice() {
 	// 	return e.s
 	// }
 
+}
+
+type Portion int
+
+const (
+	Regular Portion = iota
+	Small
+	Large
+)
+
+type Udon struct {
+	men      Portion
+	aburaage bool
+	ebiten   uint
+}
+
+func NewUdon(p Portion, aburaage bool, ebiten uint) *Udon {
+	return &Udon{
+		men:      p,
+		aburaage: aburaage,
+		ebiten:   ebiten,
+	}
+}
+
+func NewKakeUdon(p Portion) *Udon {
+	return &Udon{
+		men:      p,
+		aburaage: false,
+		ebiten:   0,
+	}
+}
+
+func NewKitsuneUdon(p Portion) *Udon {
+	return &Udon{
+		men:      p,
+		aburaage: true,
+		ebiten:   0,
+	}
+}
+
+func NewTempuraUdon(p Portion) *Udon {
+	return &Udon{
+		men:      p,
+		aburaage: false,
+		ebiten:   3,
+	}
+}
+
+type Option struct {
+	men      Portion
+	aburaage bool
+	ebiten   uint
+}
+
+// dislike👎
+func NewUdonWithOpt(opt Option) *Udon {
+	// ゼロ値に対するデフォルト値処理は関数内部で行う
+
+	// 朝食時間は海老天1本無料
+	if opt.ebiten == 0 && time.Now().Hour() < 10 {
+		opt.ebiten = 1
+	}
+	return &Udon{
+		men:      opt.men,
+		aburaage: opt.aburaage,
+		ebiten:   opt.ebiten,
+	}
+}
+
+type fluentOpt struct {
+	men      Portion
+	aburaage bool
+	ebiten   uint
+}
+
+func NewUdonWithFlu(p Portion) *fluentOpt {
+	// これをデフォルトとする
+	return &fluentOpt{
+		men:      p,
+		aburaage: false,
+		ebiten:   1,
+	}
+}
+
+func (o *fluentOpt) Aburaage() *fluentOpt {
+	o.aburaage = true
+	return o
+}
+
+func (o *fluentOpt) Ebiten(n uint) *fluentOpt {
+	o.ebiten = n
+	return o
+}
+
+func (o *fluentOpt) Order() *Udon {
+	return &Udon{
+		men:      o.men,
+		aburaage: o.aburaage,
+		ebiten:   o.ebiten,
+	}
+}
+
+func useFluentInterface() *Udon {
+	return NewUdonWithFlu(Large).Aburaage().Order()
+}
+
+func OptionArgs() {
+	var tempraUdon = NewUdon(Large, false, 2)
+	kakeUdon := NewKakeUdon(Small)
+	kitsuneUdon := NewKitsuneUdon(Regular)
+	fmt.Printf("templaUdon: %v\n", tempraUdon)
+	fmt.Printf("kakeUdon: %v\n", kakeUdon)
+	fmt.Printf("kitsuneUdon: %v\n", kitsuneUdon)
+	breakFastUdon := NewUdonWithOpt(Option{Small, false, 0})
+	fmt.Printf("breakFastUdon: %v\n", breakFastUdon)
+	oomoriKitsune := useFluentInterface()
+	fmt.Printf("oomoriKitsune: %v\n", oomoriKitsune)
 }
