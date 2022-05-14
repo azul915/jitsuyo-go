@@ -244,3 +244,30 @@ func OptionArgs() {
 	oomoriKitsune := useFluentInterface()
 	fmt.Printf("oomoriKitsune: %v\n", oomoriKitsune)
 }
+
+type OptFunc func(r *Udon)
+
+func NewUdonFunctionaOption(opts ...OptFunc) *Udon {
+	r := &Udon{}
+	for _, opt := range opts {
+		opt(r)
+	}
+	return r
+}
+
+func OptMen(p Portion) OptFunc {
+	return func(r *Udon) { r.men = p }
+}
+
+func OptAburaage() OptFunc {
+	return func(r *Udon) { r.aburaage = true }
+}
+
+func OptEbiten(n uint) OptFunc {
+	return func(r *Udon) { r.ebiten = n }
+}
+
+func FunctionalOption() {
+	tokuseiUdon := NewUdonFunctionaOption(OptAburaage(), OptEbiten(3))
+	fmt.Printf("tokuseiUdon: %v\n", tokuseiUdon)
+}

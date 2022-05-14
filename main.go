@@ -6,5 +6,6 @@ import (
 
 func main() {
 	// sec1.Practice()
-	sec1.OptionArgs()
+	// sec1.OptionArgs()
+	sec1.FunctionalOption()
 }
