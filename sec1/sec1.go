@@ -2,6 +2,7 @@ package sec1
 
 import (
 	"errors"
+	"flag"
 	"fmt"
 	"time"
 )
@@ -271,3 +272,8 @@ func FunctionalOption() {
 	tokuseiUdon := NewUdonFunctionaOption(OptAburaage(), OptEbiten(3))
 	fmt.Printf("tokuseiUdon: %v\n", tokuseiUdon)
 }
+
+var (
+	FlagStr = flag.String("string", "default", "文字列フラグ")
+	FlagInt = flag.Int("int", -1, "数値フラグ")
+)
