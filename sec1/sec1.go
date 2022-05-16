@@ -277,3 +277,22 @@ var (
 	FlagStr = flag.String("string", "default", "文字列フラグ")
 	FlagInt = flag.Int("int", -1, "数値フラグ")
 )
+
+func PracticeSlice() {
+	s1 := make([]int, 1000)
+	fmt.Printf("len(s1): %v\n", len(s1))
+	fmt.Printf("cap(s1): %v\n", cap(s1))
+	s2 := make([]int, 0, 1000)
+	fmt.Printf("len(s2): %v\n", len(s2))
+	fmt.Printf("cap(s2): %v\n", cap(s2))
+	fmt.Println("---------------------")
+	for i := 0; i < 1000; i++ {
+		s1 = append(s1, 1)
+		s2 = append(s2, 1)
+	}
+	fmt.Printf("len(s1): %v\n", len(s1))
+	fmt.Printf("cap(s1): %v\n", cap(s1))
+	fmt.Printf("len(s2): %v\n", len(s2))
+	fmt.Printf("cap(s2): %v\n", cap(s2))
+
+}

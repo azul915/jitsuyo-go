@@ -10,7 +10,8 @@ func main() {
 	// sec1.Practice()
 	// sec1.OptionArgs()
 	// sec1.FunctionalOption()
-	commandLineArgs()
+	// commandLineArgs()
+	sec1.PracticeSlice()
 }
 
 func commandLineArgs() {
