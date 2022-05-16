@@ -4,6 +4,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -295,4 +296,31 @@ func PracticeSlice() {
 	fmt.Printf("len(s2): %v\n", len(s2))
 	fmt.Printf("cap(s2): %v\n", cap(s2))
 
+	m := make(map[string]string, 1000)
+	fmt.Println(len(m))
+}
+
+func ConcatText() {
+	src := []string{"Back", "To", "The", "Future", "Part", "III"}
+	var title string
+
+	now := time.Now()
+	for i, word := range src {
+		if i != 0 {
+			title += " "
+		}
+		title += word
+	}
+	fmt.Printf("経過: %v micro seconds, title: %v\n", time.Since(now).Microseconds(), title)
+
+	var builder strings.Builder
+	builder.Grow(100)
+	now = time.Now()
+	for i, word := range src {
+		if i != 0 {
+			builder.WriteByte(' ')
+		}
+		builder.WriteString(word)
+	}
+	fmt.Printf("経過: %v micro seconds, title: %v\n", time.Since(now).Microseconds(), builder.String())
 }

@@ -6,7 +6,7 @@ import (
 
 func main() {
 
-	sec1.PracticeSlice()
+	sec1.ConcatText()
 }
 
 // func commandLineArgs() {
