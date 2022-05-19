@@ -333,4 +333,7 @@ func TimePractice() {
 	future := time.Date(2015, time.September, 15, 7, 28, 0, 0, tz)
 	fmt.Println(now.String())
 	fmt.Println(future.Format(time.RFC3339Nano))
+
+	fmt.Println(time.Date(1994, time.May, 16, 0, 0, 0, 0, time.Local))
+
 }
