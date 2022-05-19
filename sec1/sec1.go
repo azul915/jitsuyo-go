@@ -328,4 +328,9 @@ func ConcatText() {
 func TimePractice() {
 	now := time.Now()
 	fmt.Println(now)
+
+	tz, _ := time.LoadLocation("America/Los_Angeles")
+	future := time.Date(2015, time.September, 15, 7, 28, 0, 0, tz)
+	fmt.Println(now.String())
+	fmt.Println(future.Format(time.RFC3339Nano))
 }
