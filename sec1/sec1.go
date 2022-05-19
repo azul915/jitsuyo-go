@@ -345,3 +345,15 @@ func TimePractice() {
 
 	fmt.Println(fiveMinute, tenSeconds, dur)
 }
+
+func Timer() {
+	// fmt.Println("sleep 3 seconds start")
+	// time.Sleep(3 * time.Second)
+	// fmt.Println("sleep 3 seconds finish")
+
+	fmt.Println("sleep 2 seconds start")
+	timer := time.NewTimer(2 * time.Second)
+	defer timer.Stop()
+	<-timer.C
+	fmt.Println("sleep 2 seconds finish")
+}

@@ -6,7 +6,7 @@ import (
 
 func main() {
 
-	sec1.TimePractice()
+	sec1.Timer()
 }
 
 // func commandLineArgs() {
