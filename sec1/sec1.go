@@ -336,4 +336,12 @@ func TimePractice() {
 
 	fmt.Println(time.Date(1994, time.May, 16, 0, 0, 0, 0, time.Local))
 
+	fiveMinute := 5 * time.Minute
+	var seconds int = 10
+	tenSeconds := time.Duration(seconds) * time.Second
+
+	past := time.Date(1955, time.November, 12, 6, 38, 0, 0, time.UTC)
+	dur := time.Now().Sub(past)
+
+	fmt.Println(fiveMinute, tenSeconds, dur)
 }
