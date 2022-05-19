@@ -324,3 +324,8 @@ func ConcatText() {
 	}
 	fmt.Printf("経過: %v micro seconds, title: %v\n", time.Since(now).Microseconds(), builder.String())
 }
+
+func TimePractice() {
+	now := time.Now()
+	fmt.Println(now)
+}
