@@ -357,3 +357,38 @@ func Timer() {
 	<-timer.C
 	fmt.Println("sleep 2 seconds finish")
 }
+
+func NextMonth() {
+	// jst, _ := time.LoadLocation("Asia/Tokyo")
+	// now := time.Date(2022, time.May, time.Now().Day(), time.Now().Hour(), time.Now().Minute(), 0, 0, jst)
+	// nextMonth := now.AddDate(0, 1, 0)
+	// fmt.Println(nextMonth)
+
+	misoka := []time.Time{
+		time.Date(2022, time.January, 31, 0, 0, 0, 0, time.Local),
+		time.Date(2022, time.February, 28, 0, 0, 0, 0, time.Local),
+		time.Date(2022, time.March, 31, 0, 0, 0, 0, time.Local),
+		time.Date(2022, time.April, 30, 0, 0, 0, 0, time.Local),
+		time.Date(2022, time.May, 31, 0, 0, 0, 0, time.Local),
+		time.Date(2022, time.June, 30, 0, 0, 0, 0, time.Local),
+		time.Date(2022, time.July, 31, 0, 0, 0, 0, time.Local),
+		time.Date(2022, time.August, 31, 0, 0, 0, 0, time.Local),
+		time.Date(2022, time.September, 30, 0, 0, 0, 0, time.Local),
+		time.Date(2022, time.October, 31, 0, 0, 0, 0, time.Local),
+		time.Date(2022, time.November, 30, 0, 0, 0, 0, time.Local),
+		time.Date(2022, time.December, 31, 0, 0, 0, 0, time.Local),
+	}
+	for _, month := range misoka {
+
+		fmt.Println(func(t time.Time) time.Time {
+			year1, month2, day := t.Date()
+			first := time.Date(year1, month2, 1, 0, 0, 0, 0, time.Local)
+			year2, month2, _ := first.AddDate(0, 1, 0).Date()
+			nextMonthTime := time.Date(year2, month2, day, 0, 0, 0, 0, time.Local)
+			if month2 != nextMonthTime.Month() {
+				return first.AddDate(0, 2, -1)
+			}
+			return nextMonthTime
+		}(month))
+	}
+}

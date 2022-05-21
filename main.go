@@ -6,7 +6,7 @@ import (
 
 func main() {
 
-	sec1.Timer()
+	sec1.NextMonth()
 }
 
 // func commandLineArgs() {
