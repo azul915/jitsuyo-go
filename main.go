@@ -1,14 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"jitsuyo-go/sec2"
 )
 
 func main() {
 
-	st := sec2.StatusOK
-	fmt.Println(st.String())
+	sec2.ContainerList()
 }
 
 // func commandLineArgs() {
