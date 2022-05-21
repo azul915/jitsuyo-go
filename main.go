@@ -1,12 +1,14 @@
 package main
 
 import (
-	"jitsuyo-go/sec1"
+	"fmt"
+	"jitsuyo-go/sec2"
 )
 
 func main() {
 
-	sec1.NextMonth()
+	st := sec2.StatusOK
+	fmt.Println(st.String())
 }
 
 // func commandLineArgs() {
