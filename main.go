@@ -6,7 +6,7 @@ import (
 
 func main() {
 
-	sec2.ContainerList()
+	sec2.ConsumerPrac()
 }
 
 // func commandLineArgs() {

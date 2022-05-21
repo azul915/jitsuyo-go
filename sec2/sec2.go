@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"fmt"
 	"net/url"
+	"time"
 )
 
 type HTTPStatus int
@@ -49,4 +50,55 @@ func ContainerList() {
 	for ele := l.Front(); ele != nil; ele = ele.Next() {
 		fmt.Println(ele.Value)
 	}
+}
+
+type Consumer struct {
+	Name       string
+	ActiveFlg  bool
+	ExpireDate time.Time
+}
+
+type Consumers []Consumer
+
+func (c Consumers) ActiveConsumer() Consumers {
+	resp := make(Consumers, 0, len(c))
+	for _, v := range c {
+		if v.ActiveFlg {
+			resp = append(resp, v)
+		}
+	}
+	return resp
+}
+
+func (c Consumers) RequiredFollow() Consumers {
+	return c.ActiveConsumer().expires(time.Now().AddDate(0, 1, 0))
+}
+
+func (c Consumers) expires(end time.Time) Consumers {
+	resp := make(Consumers, 0, len(c))
+	for _, v := range c {
+		if v.ExpireDate.Before(end) {
+			resp = append(resp, v)
+		}
+	}
+	return resp
+}
+
+func ConsumerPrac() {
+	cs := Consumers{
+		{
+			Name:      "Tom",
+			ActiveFlg: true,
+		},
+		{
+			Name:      "Nancy",
+			ActiveFlg: false,
+		},
+		{
+			Name:      "James",
+			ActiveFlg: true,
+		},
+	}
+	acs := cs.ActiveConsumer()
+	fmt.Println(acs)
 }
