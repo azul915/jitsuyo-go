@@ -6,7 +6,7 @@ import (
 
 func main() {
 
-	sec2.Emebed()
+	sec2.Embed()
 }
 
 // func commandLineArgs() {

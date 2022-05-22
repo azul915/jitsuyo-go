@@ -276,7 +276,7 @@ func (o OreillyBook) GetOreillyURL() string {
 	return fmt.Sprintf("https://www.oreilly.co.jp/books/%s/", o.ISBN13)
 }
 
-func Emebed() {
+func Embed() {
 	ob := OreillyBook{
 		ISBN13: "9784873119038",
 		Book: Book{
