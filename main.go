@@ -6,7 +6,7 @@ import (
 
 func main() {
 
-	sec2.Foo()
+	sec2.Bar()
 }
 
 // func commandLineArgs() {

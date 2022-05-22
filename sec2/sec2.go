@@ -127,6 +127,7 @@ func Dereference() {
 type Person struct {
 	FirstName string
 	LastName  string
+	Age       int
 }
 
 func CreateInstance() {
@@ -206,4 +207,41 @@ func Foo() {
 	fmt.Printf("s: %v\n", *s.v)
 	s.Modify()
 	fmt.Printf("s: %v\n", *s.v)
+}
+
+type People []Person
+
+func (p People) SeijinA() People {
+	var resp People
+	for _, e := range p {
+		if 18 < e.Age {
+			resp = append(resp, e)
+		}
+	}
+	return resp
+}
+
+func Bar() {
+	pp := People{
+		{
+			FirstName: "Taro",
+			LastName:  "Yamada",
+			Age:       17,
+		},
+		{
+			FirstName: "Jiro",
+			LastName:  "Tanaka",
+			Age:       18,
+		},
+		{
+			FirstName: "Hiroshi",
+			LastName:  "Suzuki",
+			Age:       20,
+		},
+	}
+
+	fmt.Printf("pp: %v\n", pp)
+	sj := pp.SeijinA()
+	fmt.Printf("pp: %v\n", pp)
+	fmt.Printf("sj: %v\n", sj)
 }
