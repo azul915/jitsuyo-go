@@ -6,7 +6,7 @@ import (
 
 func main() {
 
-	sec2.ConsumerPrac()
+	sec2.Dereference()
 }
 
 // func commandLineArgs() {

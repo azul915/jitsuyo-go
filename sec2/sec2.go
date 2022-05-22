@@ -102,3 +102,24 @@ func ConsumerPrac() {
 	acs := cs.ActiveConsumer()
 	fmt.Println(acs)
 }
+
+type Book struct {
+	Title      string
+	Author     string
+	Publisher  string
+	ISBN       string
+	ReleasedAt time.Time
+}
+
+func Dereference() {
+	b := &Book{
+		Title: "Mithril",
+	}
+	fmt.Println(b.Title)
+	fmt.Println((*b).Title)
+
+	b2 := &b
+	// fmt.Println(b2.Title) //NG
+	fmt.Println((**b2).Title)
+	fmt.Println((*b2).Title)
+}
