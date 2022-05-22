@@ -286,4 +286,7 @@ func Emebed() {
 	}
 	fmt.Println(ob.GetAmazonURL())
 	fmt.Println(ob.GetOreillyURL())
+
+	// of course, this is also ok
+	fmt.Println(ob.Book.GetAmazonURL())
 }
