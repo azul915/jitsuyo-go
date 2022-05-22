@@ -123,3 +123,36 @@ func Dereference() {
 	fmt.Println((**b2).Title)
 	fmt.Println((*b2).Title)
 }
+
+func CreateInstance() {
+	type Person struct {
+		FirstName string
+		LastName  string
+	}
+
+	// *Person型、ゼロ値
+	p1 := new(Person)
+
+	// Person型、ゼロ値
+	var p2 Person
+
+	// *Person型、設定された初期値
+	p3 := &Person{
+		FirstName: "Taro",
+		LastName:  "Yamada",
+	}
+
+	// Person型、設定された初期値
+	p4 := Person{
+		FirstName: "Ichiro",
+		LastName:  "Suzuki",
+	}
+	fmt.Printf("p1: %v, p2: %v, p3: %v, p4: %v\n", p1, p2, *p3, p4)
+
+	// *Person型、nilが代入
+	var p5 *Person
+	fmt.Println(p5)
+	// *Person型のp5にはnilが入っているので、
+	// デリファレンスしようとするとpanic(invalid memory address or nil pointer dereference)が発生する
+	// fmt.Println(*p5)
+}
