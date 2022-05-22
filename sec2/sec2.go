@@ -245,3 +245,45 @@ func Bar() {
 	fmt.Printf("pp: %v\n", pp)
 	fmt.Printf("sj: %v\n", sj)
 }
+
+func String[T any](s T) string {
+	return fmt.Sprintf("%v", s)
+}
+
+type Struct struct {
+	t interface{}
+}
+
+func (s Struct) String() string {
+	return fmt.Sprintf("%v", s.t)
+}
+
+// func (s Struct[T]) Method[R any](r R) {
+// 	fmt.Println(s.t, r)
+// }
+
+// 埋め込みはは名前をつけずに型だけを構造体のフィールドとして記述
+type OreillyBook struct {
+	Book
+	ISBN13 string
+}
+
+func (b Book) GetAmazonURL() string {
+	return fmt.Sprintf("https://amazon.co.jp/dp/%s", b.ISBN)
+}
+
+func (o OreillyBook) GetOreillyURL() string {
+	return fmt.Sprintf("https://www.oreilly.co.jp/books/%s/", o.ISBN13)
+}
+
+func Emebed() {
+	ob := OreillyBook{
+		ISBN13: "9784873119038",
+		Book: Book{
+			ISBN:  "123456789",
+			Title: "Real World HTTP",
+		},
+	}
+	fmt.Println(ob.GetAmazonURL())
+	fmt.Println(ob.GetOreillyURL())
+}
