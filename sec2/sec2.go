@@ -124,11 +124,12 @@ func Dereference() {
 	fmt.Println((*b2).Title)
 }
 
+type Person struct {
+	FirstName string
+	LastName  string
+}
+
 func CreateInstance() {
-	type Person struct {
-		FirstName string
-		LastName  string
-	}
 
 	// *Person型、ゼロ値
 	p1 := new(Person)
@@ -155,4 +156,54 @@ func CreateInstance() {
 	// *Person型のp5にはnilが入っているので、
 	// デリファレンスしようとするとpanic(invalid memory address or nil pointer dereference)が発生する
 	// fmt.Println(*p5)
+}
+
+func (p Person) SetNameA(first, last string) {
+	p.FirstName = first
+	p.LastName = last
+}
+
+func (p *Person) SetNameB(first, last string) {
+	p.FirstName = first
+	p.LastName = last
+}
+
+func (p Person) SetNameC(first, last string) Person {
+	var rtn Person
+	rtn.FirstName = first
+	rtn.LastName = last
+	return rtn
+}
+
+func SetNamePrac() {
+	var p1 Person
+	p1.SetNameA("Taro", "Yamada")
+	fmt.Printf("p1: %v\n", p1)
+
+	p2 := new(Person)
+	p2.SetNameB("Taro", "Yamada")
+	fmt.Printf("p2: %v\n", p2)
+
+	p3 := Person{}
+	p4 := p3.SetNameC("Taro", "Yamada")
+	fmt.Printf("p3: %v, p4: %v\n", p3, p4)
+}
+
+type StructWithPointer struct {
+	v *int
+}
+
+func (a StructWithPointer) Modify() {
+	*a.v = 10
+}
+
+// Bad😇
+// インスタンスレシーバなのにインスタンスそのものに変更ができてしまう
+func Foo() {
+	s := StructWithPointer{}
+	i := 1
+	s.v = &i
+	fmt.Printf("s: %v\n", *s.v)
+	s.Modify()
+	fmt.Printf("s: %v\n", *s.v)
 }

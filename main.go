@@ -6,7 +6,7 @@ import (
 
 func main() {
 
-	sec2.CreateInstance()
+	sec2.Foo()
 }
 
 // func commandLineArgs() {
