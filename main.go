@@ -1,12 +1,10 @@
 package main
 
-import (
-	"jitsuyo-go/sec2"
-)
+import "jitsuyo-go/sec3"
 
 func main() {
 
-	sec2.Hoge()
+	sec3.Hoge()
 }
 
 // func commandLineArgs() {
