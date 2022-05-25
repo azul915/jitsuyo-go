@@ -6,6 +6,7 @@ import (
 	"math/big"
 	"reflect"
 	"strconv"
+	"sync"
 	"time"
 	"unsafe"
 )
@@ -447,4 +448,27 @@ func ChanPrac() {
 	fmt.Println("wait")
 	<-wait
 	fmt.Println("finished")
+}
+
+var pool *sync.Pool
+
+type BigStruct struct {
+	Member string
+}
+
+func Pool() {
+	pool = &sync.Pool{
+		New: func() interface{} {
+			return &BigStruct{}
+		},
+	}
+
+	b := pool.Get().(*BigStruct)
+	pool.Put(b)
+}
+
+func NewBigStruct() *BigStruct {
+	b := pool.Get().(*BigStruct)
+	b.Member = ""
+	return b
 }
