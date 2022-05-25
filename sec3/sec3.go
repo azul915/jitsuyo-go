@@ -472,3 +472,27 @@ func NewBigStruct() *BigStruct {
 	b.Member = ""
 	return b
 }
+
+type Parent struct{}
+
+func (p Parent) m1() {
+	p.m2()
+}
+
+func (p Parent) m2() {
+	fmt.Println("Parent")
+}
+
+type Child struct {
+	Parent
+}
+
+func (c Child) m2() {
+	fmt.Println("Child")
+}
+
+func EmbedPrac() {
+	c := Child{}
+	c.m1() // Parent
+	c.m2() // Child
+}
