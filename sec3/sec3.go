@@ -370,3 +370,30 @@ func Encode(target map[string]string, src interface{}) error {
 	}
 	return nil
 }
+
+type NoCopyStruct struct {
+	self  *NoCopyStruct
+	Value *string
+}
+
+func NewNoCopyStruc(value string) *NoCopyStruct {
+	r := &NoCopyStruct{
+		Value: &value,
+	}
+	r.self = r
+	return r
+}
+
+func (n *NoCopyStruct) String() string {
+	if n != n.self {
+		panic("should not copy NoCopyStruct instance without Copy() method")
+	}
+	return *n.Value
+}
+
+func NoCopyStructPrac() {
+	nnc1 := NewNoCopyStruc("practice")
+	fmt.Println(nnc1.String())
+	nnc2 := NoCopyStruct{}
+	fmt.Println(nnc2.String())
+}
