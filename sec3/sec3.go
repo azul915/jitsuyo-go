@@ -3,6 +3,7 @@ package sec3
 import (
 	"fmt"
 	"log"
+	"math/big"
 	"reflect"
 	"strconv"
 	"time"
@@ -391,9 +392,48 @@ func (n *NoCopyStruct) String() string {
 	return *n.Value
 }
 
+func (n *NoCopyStruct) Copy() *NoCopyStruct {
+	str := *n.Value
+	p2 := &NoCopyStruct{
+		Value: &str,
+	}
+	p2.self = p2
+	return p2
+}
+
 func NoCopyStructPrac() {
 	nnc1 := NewNoCopyStruc("practice")
 	fmt.Println(nnc1.String())
 	nnc2 := NoCopyStruct{}
 	fmt.Println(nnc2.String())
+}
+
+type Currency struct{}
+type MutableMoney struct {
+	currency Currency
+	amount   *big.Int
+}
+
+func (m MutableMoney) Currency() Currency {
+	return m.currency
+}
+
+func (m *MutableMoney) SetCurrency(c Currency) {
+	m.currency = c
+}
+
+type ImmutablMoney struct {
+	currency Currency
+	amount   *big.Int
+}
+
+func (im ImmutablMoney) Currency() Currency {
+	return im.currency
+}
+
+func (im ImmutablMoney) SetCurrency(c Currency) ImmutablMoney {
+	return ImmutablMoney{
+		currency: c,
+		amount:   im.amount,
+	}
 }
