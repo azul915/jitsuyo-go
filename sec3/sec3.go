@@ -496,3 +496,27 @@ func EmbedPrac() {
 	c.m1() // Parent
 	c.m2() // Child
 }
+
+type I interface {
+	n1(i I)
+	n2()
+}
+
+func (p Parent) n1(i I) {
+	i.n2()
+}
+
+func (p Parent) n2() {
+	fmt.Println("Parent")
+}
+
+func (c Child) n2() {
+	fmt.Println("Child")
+}
+
+func Prac() {
+	p := Parent{}
+	p.n1(p)
+	c := Child{}
+	c.n1(c)
+}
