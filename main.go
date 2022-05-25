@@ -4,7 +4,7 @@ import "jitsuyo-go/sec3"
 
 func main() {
 
-	sec3.NoCopyStructPrac()
+	sec3.ChanPrac()
 }
 
 // func commandLineArgs() {

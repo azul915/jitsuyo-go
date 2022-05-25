@@ -437,3 +437,14 @@ func (im ImmutablMoney) SetCurrency(c Currency) ImmutablMoney {
 		amount:   im.amount,
 	}
 }
+
+func ChanPrac() {
+	wait := make(chan struct{})
+	go func() {
+		fmt.Println("send")
+		wait <- struct{}{}
+	}()
+	fmt.Println("wait")
+	<-wait
+	fmt.Println("finished")
+}
