@@ -6,7 +6,7 @@ import (
 
 func main() {
 
-	sec4.CastPrac()
+	sec4.FishListPrac()
 }
 
 // func commandLineArgs() {

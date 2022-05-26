@@ -95,3 +95,26 @@ func CastPrac() {
 		log.Printf("好きなものは: %v\n", v)
 	}
 }
+
+func FishListPrac() {
+
+	// type Fish interface{}
+	// var fishList = []Fish{"鯖", "鰤", "鮪"}
+	// var fishNameList = fishList.([]string) // Compile Error
+	// var anyList []any = fishList // Compile Error
+
+	var fishList = []any{"鯖", "鰤", "鮪"}
+	fishNames := make([]string, len(fishList))
+	for i, f := range fishList {
+		if fn, ok := f.(string); ok {
+			fishNames[i] = fn
+		}
+	}
+
+	fibonacciNumbers := []int{1, 1, 2, 3, 5, 8}
+	anyValues := make([]any, len(fibonacciNumbers))
+	for i, fn := range fibonacciNumbers {
+		// アップキャスト型アサーション不要
+		anyValues[i] = fn
+	}
+}
