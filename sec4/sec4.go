@@ -2,7 +2,9 @@ package sec4
 
 import (
 	"bufio"
+	"context"
 	"io"
+	"log"
 	"os"
 	"strings"
 
@@ -71,4 +73,25 @@ func NormalizeString(i string) (string, error) {
 		return "", err
 	}
 	return w.String(), nil
+}
+
+func CastPrac() {
+	ctx := context.WithValue(context.Background(), "favorite", "銭形平次")
+
+	// ctx.Value()はinterface{}
+	// okでキャスト成功可否を確認する
+	if s, ok := ctx.Value("favorite").(string); ok {
+		log.Printf("私が好きなものは%sです\n", s)
+	}
+
+	switch v := ctx.Value("favorite").(type) {
+	case string:
+		log.Printf("好きなものは: %s\n", v)
+	case int:
+		log.Printf("好きな数値は: %d\n", v)
+	case complex128:
+		log.Printf("好きな複素数は: %f\n", v)
+	default:
+		log.Printf("好きなものは: %v\n", v)
+	}
 }

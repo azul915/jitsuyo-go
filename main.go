@@ -6,7 +6,7 @@ import (
 
 func main() {
 
-	sec4.IntefacePrac()
+	sec4.CastPrac()
 }
 
 // func commandLineArgs() {
