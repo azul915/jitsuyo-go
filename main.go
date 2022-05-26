@@ -1,10 +1,12 @@
 package main
 
-import "jitsuyo-go/sec3"
+import (
+	"jitsuyo-go/sec4"
+)
 
 func main() {
 
-	sec3.Prac()
+	sec4.IntefacePrac()
 }
 
 // func commandLineArgs() {
