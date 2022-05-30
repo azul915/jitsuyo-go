@@ -106,6 +106,7 @@ func FishListPrac() {
 	var fishList = []any{"鯖", "鰤", "鮪"}
 	fishNames := make([]string, len(fishList))
 	for i, f := range fishList {
+		// ダウンキャストは型アサーション必要
 		if fn, ok := f.(string); ok {
 			fishNames[i] = fn
 		}
@@ -118,3 +119,25 @@ func FishListPrac() {
 		anyValues[i] = fn
 	}
 }
+
+type User struct {
+	FirstName string
+	LastName  string
+	Gender    string
+	Birthday  string
+}
+type IUser interface {
+	Nickname() string
+	IsMale() bool
+}
+
+func (u *User) Nickname() string {
+	return u.FirstName[:1] + u.LastName[:1]
+}
+func (u *User) IsMale() bool {
+	return u.Gender == "male"
+}
+
+// func (u *User) Age() int {
+// 	return age(Birthday)
+// }
