@@ -6,7 +6,7 @@ import (
 
 func main() {
 
-	sec4.FishListPrac()
+	sec4.Gosei()
 }
 
 // func commandLineArgs() {

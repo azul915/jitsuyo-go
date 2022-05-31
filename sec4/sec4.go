@@ -3,6 +3,7 @@ package sec4
 import (
 	"bufio"
 	"context"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -124,8 +125,8 @@ type User struct {
 	FirstName string
 	LastName  string
 	Gender    string
-	Birthday  string
 }
+
 type IUser interface {
 	Nickname() string
 	IsMale() bool
@@ -134,10 +135,49 @@ type IUser interface {
 func (u *User) Nickname() string {
 	return u.FirstName[:1] + u.LastName[:1]
 }
+
 func (u *User) IsMale() bool {
 	return u.Gender == "male"
 }
 
-// func (u *User) Age() int {
-// 	return age(Birthday)
-// }
+type Address struct {
+	PostCode   string
+	Prefecture string
+	City       string
+	Other      string
+}
+
+type IAddress interface {
+	IsSyutoken() bool
+}
+
+func (a *Address) IsSyutoken() bool {
+	return a.Prefecture == "Tokyo" || a.Prefecture == "Kanagawa" || a.Prefecture == "Saitama" || a.Prefecture == "Chiba"
+}
+
+type IAccount interface {
+	IUser
+	IAddress
+}
+
+type Account struct{}
+
+func (a *Account) IsSyutoken() bool {
+	return a.IsSyutoken()
+}
+
+func (a *Account) Nickname() string {
+	return a.Nickname()
+}
+
+func (a *Account) IsMale() bool {
+	return a.IsMale()
+}
+
+func Gosei() {
+	var a IAccount
+	a = &Account{}
+	fmt.Println(a.IsMale())
+	fmt.Println(a.IsSyutoken())
+	fmt.Println(a.Nickname())
+}
