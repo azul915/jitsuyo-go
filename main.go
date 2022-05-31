@@ -1,12 +1,12 @@
 package main
 
 import (
-	"jitsuyo-go/sec4"
+	"jitsuyo-go/sec5"
 )
 
 func main() {
 
-	sec4.Gosei()
+	sec5.Sec5()
 }
 
 // func commandLineArgs() {
