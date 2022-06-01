@@ -2,11 +2,12 @@ package sec5
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
+
+	"go.uber.org/multierr"
 )
 
 func Sec5() {
@@ -75,3 +76,16 @@ func ErrorHandling() error {
 // 		}
 // 	}
 // }
+
+func MultiError() {
+	var merr error
+	ers := []error{nil, errors.New("Error 1"), nil, errors.New("Error 3")}
+	for _, e := range ers {
+		merr = multierr.Append(merr, e)
+	}
+
+	if merr != nil {
+		fmt.Println(merr)
+		fmt.Println(merr.Error())
+	}
+}
