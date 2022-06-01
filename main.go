@@ -1,12 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"jitsuyo-go/sec5"
 )
 
 func main() {
 
-	sec5.Sec5()
+	fmt.Println(sec5.ErrorHandling())
 }
 
 // func commandLineArgs() {

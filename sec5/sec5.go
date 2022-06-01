@@ -1,6 +1,8 @@
 package sec5
 
 import (
+	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"io"
@@ -36,3 +38,40 @@ func ReadContents(url string) ([]byte, error) {
 	}
 	return io.ReadAll(resp.Body)
 }
+
+// エラーハンドリング基本方針
+// 1. 呼び出し元に関数の引数などの情報を付与してエラーを返す
+// 2. ログを出力して処理を継続する
+// 3. リトライを実施する
+// 4. リソースをクローズする
+
+type User struct{}
+
+func getInvitedUserWithEmail(ctx context.Context, email string) (User, error) {
+	return User{}, errors.New("Not Found.")
+}
+
+func ErrorHandling() error {
+
+	// 1. 呼び出し元に関数の引数などの情報を付与してエラーを返す
+	c := context.Background()
+	address := "hoge@gmail.com"
+	_, err := getInvitedUserWithEmail(c, address)
+	if err != nil {
+		return fmt.Errorf("fail to get invited user with email (%s): %w", address, err)
+	}
+	return nil
+}
+
+// func fetchCapacity(ctx context.Context, key string) (int, error) {
+// 	var capacity int
+// 	// 2. ログを出力して処理を継続する
+// 	db, _ := sql.Open("driver-name", "database=test1")
+// 	query := `SELECT value FROM parameter_master WHERE key = $1;`
+// 	err := db.QueryRowContext(context.Background(), query, key)
+// 	if err != nil {
+// 		if errors.Is(err, sql.ErrNoRows) {
+
+// 		}
+// 	}
+// }
