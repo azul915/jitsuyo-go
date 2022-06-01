@@ -82,6 +82,7 @@ func MultiError() {
 	ers := []error{nil, errors.New("Error 1"), nil, errors.New("Error 3")}
 	for _, e := range ers {
 		merr = multierr.Append(merr, e)
+		multierr.Errors(merr)
 	}
 
 	if merr != nil {
