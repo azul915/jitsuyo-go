@@ -3,7 +3,6 @@ module jitsuyo-go
 go 1.18
 
 require (
-	github.com/azul915/go_algorithm_solution v0.0.0-20220603151117-1cb06fbd0f09
 	github.com/gen2brain/beeep v0.0.0-20220518085355-d7852edf42fc
 	go.uber.org/multierr v1.8.0
 )
