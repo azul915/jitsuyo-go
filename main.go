@@ -2,14 +2,17 @@ package main
 
 import (
 	"fmt"
-	_ "jitsuyo-go/inittestb"
-	_ "jitsuyo-go/inittestc"
 )
 
-func init() {
-	fmt.Println("main.init")
-}
+var version string
 
+// CGO_ENABLED=0 go build -trimpath -ldflags '-s -w -X main.version=1.0.0' main.go
+// ls -la ./main | awk '{ print $5 }'
+// 1350992
+
+// CGO_ENABLED=0 go build -ldflags '-X main.version=1.0.0' main.go
+// ls -la ./main | awk '{ print $5 }'
+// 1867088
 func main() {
-	fmt.Println("main")
+	fmt.Printf("Hello 世界, version = %s", version)
 }
