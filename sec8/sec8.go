@@ -24,4 +24,15 @@ func DecodePrac() {
 		log.Fatal(err)
 	}
 	fmt.Printf("%+v\n", resp)
+
+	jsonBlob := []byte(`{
+		"origin": "255.255.255.255",
+		"url": "https://httpbin.org/get"
+	}`)
+	var hoge ip
+	if err = json.Unmarshal(jsonBlob, &hoge); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("%+v\n", hoge)
+
 }
