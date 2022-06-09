@@ -1,9 +1,9 @@
 package main
 
 import (
-	"jitsuyo-go/sec7"
+	"jitsuyo-go/sec8"
 )
 
 func main() {
-	sec7.Sec7()
+	sec8.DecodePrac()
 }
