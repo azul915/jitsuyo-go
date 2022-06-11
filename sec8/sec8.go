@@ -64,4 +64,7 @@ func DecodePrac() {
 	}
 	json.NewEncoder(&b).Encode(u)
 	fmt.Printf("%v\n", b.String())
+
+	m, _ := json.Marshal(u)
+	fmt.Println(string(m))
 }
