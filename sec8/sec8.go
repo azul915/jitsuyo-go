@@ -72,5 +72,6 @@ func DecodePrac() {
 	uu := user{
 		UserID: "001", UserName: "gopher", Languages: []string{},
 	}
-	fmt.Println(uu)
+	bb, _ := json.Marshal(uu)
+	fmt.Println(string(bb))
 }
