@@ -24,9 +24,11 @@ type FormInput struct {
 	CompanyName string `json:"company_name,omitempty"`
 }
 type Bottle struct {
-	Name  string `json:"name"`
-	Price int    `json:"price,omitempty"`
-	KCal  *int   `json:"kcal,omitempty"`
+	Name        string  `json:"name"`
+	Price       int     `json:"price,omitempty"`
+	KCal        *int    `json:"kcal,omitempty"`
+	Description *string `json:"description,omitempty"`
+	HasSuger    *bool   `json:"hasSuger,omitempty"`
 }
 
 func DecodePrac() {
@@ -89,15 +91,38 @@ func DecodePrac() {
 	fi, _ := json.Marshal(in)
 	fmt.Println(string(fi))
 
-	bottle := Bottle{
-		Name:  "ミネラルウォーター",
-		Price: 0,
-		KCal:  Int(0),
+	// omitempty は各型のdefault値(0, false, ""(空文字))を明示的に指定してもGoのゼロ値でエンコードされる
+	// bottle := Bottle{
+	// 	Name:        "ミネラルウォーター",
+	// 	Price:       0,
+	// 	Description: "",
+	// 	HasSuger:    false,
+	// }
+	// out, _ := json.Marshal(bottle)
+	// fmt.Println(string(out))
+
+	bo := Bottle{
+		Name:        "飲み物",
+		Price:       0,
+		KCal:        Int(0),
+		Description: String(""),
+		HasSuger:    Bool(false),
 	}
-	out, _ := json.Marshal(bottle)
-	fmt.Println(string(out))
+	fmt.Println(bo.String())
 }
 
 func Int(v int) *int {
 	return &v
+}
+
+func String(v string) *string {
+	return &v
+}
+
+func Bool(v bool) *bool {
+	return &v
+}
+
+func (b *Bottle) String() string {
+	return fmt.Sprintf("{ %v, %v, %v, %v, %v }", b.Name, b.Price, *b.KCal, *b.Description, *b.HasSuger)
 }
