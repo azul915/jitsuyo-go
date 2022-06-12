@@ -19,6 +19,10 @@ type user struct {
 	Languages []string `json:"languages"`
 }
 
+type FormInput struct {
+	Name        string `json:"name"`
+	CompanyName string `json:"company_name,omitempty"`
+}
 type Bottle struct {
 	Name  string `json:"name"`
 	Price int    `json:"price,omitempty"`
@@ -80,6 +84,10 @@ func DecodePrac() {
 	}
 	bb, _ := json.Marshal(uu)
 	fmt.Println(string(bb))
+
+	in := FormInput{Name: "山田太郎"}
+	fi, _ := json.Marshal(in)
+	fmt.Println(string(fi))
 
 	bottle := Bottle{
 		Name:  "ミネラルウォーター",
