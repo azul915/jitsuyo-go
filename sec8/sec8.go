@@ -19,6 +19,12 @@ type user struct {
 	Languages []string `json:"languages"`
 }
 
+type Bottle struct {
+	Name  string `json:"name"`
+	Price int    `json:"price,omitempty"`
+	KCal  *int   `json:"kcal,omitempty"`
+}
+
 func DecodePrac() {
 	f, err := os.Open("sec8/ip.json")
 	if err != nil {
@@ -74,4 +80,16 @@ func DecodePrac() {
 	}
 	bb, _ := json.Marshal(uu)
 	fmt.Println(string(bb))
+
+	bottle := Bottle{
+		Name:  "ミネラルウォーター",
+		Price: 0,
+		KCal:  Int(0),
+	}
+	out, _ := json.Marshal(bottle)
+	fmt.Println(string(out))
+}
+
+func Int(v int) *int {
+	return &v
 }
