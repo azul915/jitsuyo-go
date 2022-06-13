@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
+	"time"
 )
 
 type ip struct {
@@ -34,6 +36,21 @@ type Bottle struct {
 type Rectangle struct {
 	Width  int `json:"width"`
 	Height int `json:"height"`
+}
+
+type Record struct {
+	ProcessID string `json:"process_id"`
+	DeletedAt JSTime `json:"deleted_at"`
+}
+type JSTime time.Time
+
+func (t JSTime) MarshalJSON() ([]byte, error) {
+	tt := time.Time(t)
+	if tt.IsZero() {
+		return []byte("null"), nil
+	}
+	v := strconv.Itoa(int(tt.UnixMilli()))
+	return []byte(v), nil
 }
 
 func DecodePrac() {
@@ -127,6 +144,13 @@ func DecodePrac() {
 		// json: unknown field "radius"
 		fmt.Println(err)
 	}
+
+	r := &Record{
+		ProcessID: "0001",
+		DeletedAt: JSTime(time.Now()),
+	}
+	bbb, _ := json.Marshal(r)
+	fmt.Println(string(bbb))
 }
 
 func Int(v int) *int {
