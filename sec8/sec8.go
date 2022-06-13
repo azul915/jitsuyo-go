@@ -31,6 +31,11 @@ type Bottle struct {
 	HasSuger    *bool   `json:"hasSuger,omitempty"`
 }
 
+type Rectangle struct {
+	Width  int `json:"width"`
+	Height int `json:"height"`
+}
+
 func DecodePrac() {
 	f, err := os.Open("sec8/ip.json")
 	if err != nil {
@@ -109,6 +114,19 @@ func DecodePrac() {
 		HasSuger:    Bool(false),
 	}
 	fmt.Println(bo.String())
+
+	ufBlob := []byte(`{
+		"width": 5,
+		"height": 10,
+		"radius": 6
+	}`)
+	var rect Rectangle
+	d := json.NewDecoder(bytes.NewReader(ufBlob))
+	d.DisallowUnknownFields()
+	if err := d.Decode(&rect); err != nil {
+		// json: unknown field "radius"
+		fmt.Println(err)
+	}
 }
 
 func Int(v int) *int {
