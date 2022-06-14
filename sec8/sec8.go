@@ -44,6 +44,20 @@ type Record struct {
 }
 type JSTime time.Time
 
+type MyTime struct {
+	*time.Time
+}
+
+func (mt *MyTime) UnmarshalJSON(data []byte) error {
+	t, err := time.Parse("\"2006/01/02\"", string(data))
+	*mt = MyTime{&t}
+	return err
+}
+
+func (mu MyTime) MarshalJSON() ([]byte, error) {
+	return json.Marshal(mu.Format("2006/01/02"))
+}
+
 func (t JSTime) MarshalJSON() ([]byte, error) {
 	tt := time.Time(t)
 	if tt.IsZero() {
@@ -53,6 +67,14 @@ func (t JSTime) MarshalJSON() ([]byte, error) {
 	return []byte(v), nil
 }
 
+type JSONSample struct {
+	TimeAt MyTime `json:"time_at"`
+}
+
+// func (t *JSTime) UnmarshalJSON(data []byte) error {
+// 	var jsonNumber json.Number
+
+// }
 func DecodePrac() {
 	f, err := os.Open("sec8/ip.json")
 	if err != nil {
@@ -151,6 +173,15 @@ func DecodePrac() {
 	}
 	bbb, _ := json.Marshal(r)
 	fmt.Println(string(bbb))
+
+	j := `{ "time_at": "2017/01/02" }`
+
+	var decoded JSONSample
+	json.Unmarshal([]byte(j), &decoded)
+	fmt.Printf("%v\n", decoded)
+
+	j2, _ := json.Marshal(decoded)
+	fmt.Printf("%v\n", string(j2))
 }
 
 func Int(v int) *int {
