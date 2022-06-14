@@ -187,11 +187,11 @@ func DecodePrac() {
 	s := []byte(`{
 					"process_id": "001", "deleted_at": 1234567891234132
 				}`)
-	var r *Record
-	if err := json.Unmarshal([]byte(s), &r); err != nil {
+	var rr *Record
+	if err := json.Unmarshal([]byte(s), &rr); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("%+v\n", time.Time(r.DeletedAt).Format(time.RFC3339Nano))
+	fmt.Printf("%+v\n", time.Time(rr.DeletedAt).Format(time.RFC3339Nano))
 
 	j := `{ "time_at": "2017/01/02" }`
 
