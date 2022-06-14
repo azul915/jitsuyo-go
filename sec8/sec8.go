@@ -71,10 +71,20 @@ type JSONSample struct {
 	TimeAt MyTime `json:"time_at"`
 }
 
-// func (t *JSTime) UnmarshalJSON(data []byte) error {
-// 	var jsonNumber json.Number
+func (t *JSTime) UnmarshalJSON(data []byte) error {
+	var jsonNumber json.Number
+	err := json.Unmarshal(data, &jsonNumber)
+	if err != nil {
+		return err
+	}
+	unix, err := jsonNumber.Int64()
+	if err != nil {
+		return err
+	}
+	*t = JSTime(time.Unix(0, unix))
+	return nil
+}
 
-// }
 func DecodePrac() {
 	f, err := os.Open("sec8/ip.json")
 	if err != nil {
@@ -174,13 +184,24 @@ func DecodePrac() {
 	bbb, _ := json.Marshal(r)
 	fmt.Println(string(bbb))
 
+	s := []byte(`{
+					"process_id": "001", "deleted_at": 1234567891234132
+				}`)
+	var r *Record
+	if err := json.Unmarshal([]byte(s), &r); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("%+v\n", time.Time(r.DeletedAt).Format(time.RFC3339Nano))
+
 	j := `{ "time_at": "2017/01/02" }`
 
 	var decoded JSONSample
 	json.Unmarshal([]byte(j), &decoded)
+	// {2017-01-02 00:00:00 +0000 UTC}
 	fmt.Printf("%v\n", decoded)
 
 	j2, _ := json.Marshal(decoded)
+	// {"time_at":"2017/01/02"}
 	fmt.Printf("%v\n", string(j2))
 }
 
