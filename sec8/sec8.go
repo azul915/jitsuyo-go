@@ -363,4 +363,29 @@ func CSV() {
 	if err := w.Error(); err != nil {
 		log.Fatal(err)
 	}
+
+	// 一度消す
+	_, err = os.Stat("sec8/oreilly.tsv")
+	if err == nil {
+		os.Remove("sec8/oreilly.tsv")
+	}
+
+	otf, err := os.OpenFile("sec8/oreilly.tsv", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer otf.Close()
+
+	tw := csv.NewWriter(otf)
+	tw.Comma = '\t'
+	defer tw.Flush()
+
+	for _, record := range records {
+		if err := tw.Write(record); err != nil {
+			log.Fatal(err)
+		}
+	}
+	if err := tw.Error(); err != nil {
+		log.Fatal(err)
+	}
 }
