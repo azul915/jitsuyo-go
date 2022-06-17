@@ -464,4 +464,30 @@ func CSV() {
 	for _, v := range rlines {
 		fmt.Printf("%+v\n", v)
 	}
+
+	type (
+		record struct {
+			Number  int    `csv:"number"`
+			Message string `csv:"message"`
+		}
+	)
+
+	c := make(chan interface{})
+	go func() {
+		defer close(c)
+		for i := 0; i < 1000*1000; i++ {
+			c <- record{i + 1, "Hello"}
+			return
+		}
+	}()
+
+	if err := gocsv.MarshalChan(c, gocsv.DefaultCSVWriter(os.Stdout)); err != nil {
+		log.Fatal(err)
+	}
+
+	// lf, err := os.Open("large.csv")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer lf.Close()
 }
