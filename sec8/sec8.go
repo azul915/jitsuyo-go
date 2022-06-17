@@ -344,8 +344,7 @@ func CSV() {
 	}
 
 	// 一度消す
-	_, err = os.Stat("sec8/oreilly.csv")
-	if err == nil {
+	if _, err := os.Stat("sec8/oreilly.csv"); err == nil {
 		os.Remove("sec8/oreilly.csv")
 	}
 
@@ -368,11 +367,9 @@ func CSV() {
 	}
 
 	// 一度消す
-	_, err = os.Stat("sec8/oreilly.tsv")
-	if err == nil {
+	if _, err := os.Stat("sec8/oreilly.tsv"); err == nil {
 		os.Remove("sec8/oreilly.tsv")
 	}
-
 	otf, err := os.OpenFile("sec8/oreilly.tsv", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatal(err)
@@ -422,8 +419,7 @@ func CSV() {
 	// 	}
 	// }
 
-	_, err = os.Stat("sec8/struct_country.csv")
-	if err == nil {
+	if _, err := os.Stat("sec8/struct_country.csv"); err == nil {
 		os.Remove("sec8/struct_country.csv")
 	}
 	sf, err := os.Create("sec8/struct_country.csv")
@@ -436,8 +432,7 @@ func CSV() {
 		log.Fatal(err)
 	}
 
-	_, err = os.Stat("sec8/struct_country_without_header.csv")
-	if err == nil {
+	if _, err := os.Stat("sec8/struct_country_without_header.csv"); err == nil {
 		os.Remove("sec8/struct_country_without_header.csv")
 	}
 	nf, err := os.Create("sec8/struct_country_without_header.csv")
@@ -484,9 +479,30 @@ func CSV() {
 		log.Fatal(err)
 	}
 
-	// lf, err := os.Open("large.csv")
+	// if _, err := os.Stat("sec8/large.csv"); err == nil {
+	// 	os.Remove("sec8/large.csv")
+	// }
+	// lf, err := os.Open("sec8/large.csv")
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
 	// defer lf.Close()
+
+	// ch := make(chan record)
+	// done := make(chan bool)
+	// go func() {
+	// 	if err := gocsv.UnmarshalToChan(lf, ch); err != nil {
+	// 		log.Fatal(err)
+	// 	}
+	// 	done <- true
+	// }()
+
+	// for {
+	// 	select {
+	// 	case v := <-ch:
+	// 		fmt.Printf("%+v\n", v)
+	// 	case <-done:
+	// 		return
+	// 	}
+	// }
 }
