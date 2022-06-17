@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	sec8.CSV()
+	sec8.MultiCSV()
 }

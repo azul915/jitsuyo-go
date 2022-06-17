@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gocarina/gocsv"
@@ -505,4 +506,44 @@ func CSV() {
 	// 		return
 	// 	}
 	// }
+}
+
+type (
+	Summary struct {
+		RecordType string
+		Summary    string
+	}
+	Country struct {
+		RecordType string
+		Name       string
+		ISOCode    string
+		Population int
+	}
+	singleCSVReader struct {
+		record []string
+	}
+)
+
+func (r singleCSVReader) Read() ([]string, error) {
+	return r.record, nil
+}
+
+func (r singleCSVReader) ReadAll() ([][]string, error) {
+	return [][]string{r.record}, nil
+}
+
+func MultiCSV() {
+	s := `summary,3件
+country,アメリカ合衆国,US/USA,310232863
+country,日本,JP/JPN,127288000
+country,中国,CN/CHN,1330044000`
+
+	r := csv.NewReader(strings.NewReader(s))
+	r.FieldsPerRecord = -1
+	all, err := r.ReadAll()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(all)
 }
