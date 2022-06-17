@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/gocarina/gocsv"
+	"github.com/xuri/excelize/v2"
 )
 
 type ip struct {
@@ -560,4 +561,26 @@ country,中国,CN/CHN,1330044000`
 			fmt.Printf("country行の読み込み: %v\n", countries[0])
 		}
 	}
+}
+
+func Excel() {
+
+	if _, err := os.Stat("sec8/Book1.xlsx"); err == nil {
+		os.Remove("sec8/Book1.xlsx")
+	}
+	out := excelize.NewFile()
+	out.SetCellValue("Sheet1", "A1", "Hello Excel")
+	if err := out.SaveAs("sec8/Book1.xlsx"); err != nil {
+		fmt.Println(err)
+	}
+
+	in, err := excelize.OpenFile("sec8/Book1.xlsx")
+	if err != nil {
+		log.Fatal(err)
+	}
+	cell, err := in.GetCellValue("Sheet1", "A1")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(cell)
 }
