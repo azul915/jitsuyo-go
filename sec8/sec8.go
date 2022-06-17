@@ -332,4 +332,35 @@ func CSV() {
 		}
 		fmt.Println(record)
 	}
+
+	records := [][]string{
+		{"書籍名", "出版年", "ページ数"},
+		{"Go言語によるWebアプリケーション開発", "2016", "280"},
+		{"Go言語による並列処理", "2018", "256"},
+		{"Go言語でつくるインタプリタ", "2018", "316"},
+	}
+
+	// 一度消す
+	_, err = os.Stat("sec8/oreilly.csv")
+	if err == nil {
+		os.Remove("sec8/oreilly.csv")
+	}
+
+	of, err := os.OpenFile("sec8/oreilly.csv", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer of.Close()
+
+	w := csv.NewWriter(of)
+	defer w.Flush()
+
+	for _, record := range records {
+		if err := w.Write(record); err != nil {
+			log.Fatal(err)
+		}
+	}
+	if err := w.Error(); err != nil {
+		log.Fatal(err)
+	}
 }
