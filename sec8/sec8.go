@@ -435,4 +435,18 @@ func CSV() {
 	if err := gocsv.MarshalFile(&lines, sf); err != nil {
 		log.Fatal(err)
 	}
+
+	_, err = os.Stat("sec8/struct_country_without_header.csv")
+	if err == nil {
+		os.Remove("sec8/struct_country_without_header.csv")
+	}
+	nf, err := os.Create("sec8/struct_country_without_header.csv")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer nf.Close()
+
+	if err := gocsv.MarshalWithoutHeaders(&lines, nf); err != nil {
+		log.Fatal(err)
+	}
 }
