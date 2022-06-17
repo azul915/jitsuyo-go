@@ -316,4 +316,20 @@ func CSV() {
 		}
 		fmt.Println(record)
 	}
+
+	tf, _ := os.Open("sec8/country.tsv")
+	defer tf.Close()
+
+	tr := csv.NewReader(tf)
+	tr.Comma = '\t'
+	for {
+		record, err := tr.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(record)
+	}
 }
