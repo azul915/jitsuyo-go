@@ -475,9 +475,8 @@ func CSV() {
 	c := make(chan interface{})
 	go func() {
 		defer close(c)
-		for i := 0; i < 1000*1000; i++ {
+		for i := 0; i < 10*10; i++ {
 			c <- record{i + 1, "Hello"}
-			return
 		}
 	}()
 
