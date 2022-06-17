@@ -322,6 +322,7 @@ func CSV() {
 
 	tr := csv.NewReader(tf)
 	tr.Comma = '\t'
+	tr.Comment = '#'
 	for {
 		record, err := tr.Read()
 		if err == io.EOF {
