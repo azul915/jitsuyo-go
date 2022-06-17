@@ -545,5 +545,19 @@ country,中国,CN/CHN,1330044000`
 		log.Fatal(err)
 	}
 
-	fmt.Println(all)
+	for _, record := range all {
+		if record[0] == "summary" {
+			var summaries []Summary
+			if err := gocsv.UnmarshalCSVWithoutHeaders(singleCSVReader{record}, &summaries); err != nil {
+				log.Fatal(err)
+			}
+			fmt.Printf("summary行の読み込み: %+v\n", summaries[0])
+		} else {
+			var countries []Country
+			if err := gocsv.UnmarshalCSVWithoutHeaders(singleCSVReader{record}, &countries); err != nil {
+				log.Fatal(err)
+			}
+			fmt.Printf("country行の読み込み: %v\n", countries[0])
+		}
+	}
 }
