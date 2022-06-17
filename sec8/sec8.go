@@ -10,6 +10,8 @@ import (
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/gocarina/gocsv"
 )
 
 type ip struct {
@@ -387,6 +389,50 @@ func CSV() {
 		}
 	}
 	if err := tw.Error(); err != nil {
+		log.Fatal(err)
+	}
+
+	type (
+		Country struct {
+			Name       string `csv:"国名"`
+			ISOCode    string `csv:"ISOコード"`
+			Population int    `csv:"人口"`
+		}
+	)
+
+	lines := []Country{
+		{Name: "アメリカ合衆国", ISOCode: "US/USA", Population: 310232863},
+		{Name: "日本", ISOCode: "JP/JPN", Population: 127288000},
+		{Name: "中国", ISOCode: "CN/CHN", Population: 1330044000},
+	}
+
+	// cannot use line (variable of type Country) as []string value in argument to sw.Write が発生する
+	// sw.Writeに書き込めるのは[]stringのみ？
+
+	// OpenFileは一般的なオープンコールで、ほとんどのユーザは代わりにOpenやCreateを使用します。
+	// これは、指定されたフラグ(O_RDONLYなど)で、指定されたファイルを開く。ファイルが存在せず、O_CREATE フラグが渡された場合、(umask の前に) perm モードでファイルが作成される。成功すれば、返されたFileのメソッドをI/Oに使用することができる。エラーがある場合、それは *PathError 型である。
+	// https://pkg.go.dev/os#OpenFile
+
+	// sfo, _ := os.OpenFile("sec8/struct_country.csv", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	// sw := csv.NewWriter(sfo)
+	// defer sw.Flush()
+	// for _, line := range lines {
+	// 	if err := sw.Write(line); err != nil {
+
+	// 	}
+	// }
+
+	_, err = os.Stat("sec8/struct_country.csv")
+	if err == nil {
+		os.Remove("sec8/struct_country.csv")
+	}
+	sf, err := os.Create("sec8/struct_country.csv")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer sf.Close()
+
+	if err := gocsv.MarshalFile(&lines, sf); err != nil {
 		log.Fatal(err)
 	}
 }
