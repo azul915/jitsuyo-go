@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	sec8.DecodePrac()
+	sec8.DecodePrac2()
 }

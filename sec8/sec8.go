@@ -220,3 +220,78 @@ func Bool(v bool) *bool {
 func (b *Bottle) String() string {
 	return fmt.Sprintf("{ %v, %v, %v, %v, %v }", b.Name, b.Price, *b.KCal, *b.Description, *b.HasSuger)
 }
+
+type Response struct {
+	Type      string `json:"type"`
+	Timestamp int    `json:"timestamp"`
+	// Payload を具体的な構造体に展開せず json.RawMessage として保持
+	Payload json.RawMessage `json:"payload"`
+}
+
+type Message struct {
+	ID        string  `json:"id"`
+	UserID    string  `json:"user_id"`
+	Message   string  `json:"message"`
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
+}
+
+type Sensor struct {
+	ID        string `json:"id"`
+	DeviceID  string `json:"device_id"`
+	Result    string `json:"result"`
+	ProductID string `json:"product_id"`
+}
+
+func DecodePrac2() {
+	resMessage := []byte(`{
+		"type": "message",
+		"timestap": 1234456,
+		"payload": {
+			"id": "12ct32gfds3ersadf4gfest6",
+			"user_id": "ABC123",
+			"message": "あいうえお",
+			"latitude": 35.12321,
+			"longitude": 139.12321
+		}
+	}`)
+
+	resSensor := []byte(`{
+		"type": "sensor",
+		"timestap": 1234456,
+		"payload": {
+			"id": "12ct32gfds3ersadf4gfest6",
+			"device_id": "ABC123",
+			"result": "ok",
+			"product_id": "1001"
+		}
+	}`)
+
+	var rm Response
+	json.Unmarshal(resMessage, &rm)
+
+	var rs Response
+	json.Unmarshal(resSensor, &rs)
+
+	switch rm.Type {
+	case "message":
+		var m Message
+		json.Unmarshal(rm.Payload, &m)
+		fmt.Println(m)
+		fmt.Println(rm)
+	case "sensor":
+		var s Sensor
+		json.Unmarshal(rm.Payload, &s)
+	}
+
+	switch rs.Type {
+	case "message":
+		var m Message
+		json.Unmarshal(rs.Payload, &m)
+	case "sensor":
+		var s Sensor
+		json.Unmarshal(rs.Payload, &s)
+		fmt.Println(s)
+		fmt.Println(rs)
+	}
+}
