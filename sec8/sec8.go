@@ -449,4 +449,19 @@ func CSV() {
 	if err := gocsv.MarshalWithoutHeaders(&lines, nf); err != nil {
 		log.Fatal(err)
 	}
+
+	rf, err := os.Open("sec8/struct_country.csv")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rf.Close()
+
+	var rlines []Country
+	if err := gocsv.UnmarshalFile(rf, &rlines); err != nil {
+		log.Fatal(err)
+	}
+
+	for _, v := range rlines {
+		fmt.Printf("%+v\n", v)
+	}
 }
