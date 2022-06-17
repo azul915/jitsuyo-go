@@ -2,8 +2,10 @@ package sec8
 
 import (
 	"bytes"
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"strconv"
@@ -293,5 +295,25 @@ func DecodePrac2() {
 		json.Unmarshal(rs.Payload, &s)
 		fmt.Println(s)
 		fmt.Println(rs)
+	}
+}
+
+func CSV() {
+	f, err := os.Open("sec8/country.csv")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	r := csv.NewReader(f)
+	for {
+		record, err := r.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(record)
 	}
 }
