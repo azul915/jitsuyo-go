@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/gen2brain/beeep v0.0.0-20220518085355-d7852edf42fc
 	github.com/gocarina/gocsv v0.0.0-20220531201732-5f969b02b902
+	github.com/ianlopshire/go-fixedwidth v0.9.2
 	github.com/xuri/excelize/v2 v2.6.0
 	go.uber.org/multierr v1.8.0
 )

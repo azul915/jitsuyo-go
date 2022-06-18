@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/gocarina/gocsv"
+	"github.com/ianlopshire/go-fixedwidth"
 	"github.com/xuri/excelize/v2"
 )
 
@@ -708,6 +709,15 @@ type Book struct {
 	EbookPrice  string
 }
 
+type Book2 struct {
+	ISBN        string `fixed:"1,17"`
+	PublishDate string `fixed:"18,25"`
+	Price       int    `fixed:"26,29"`
+	PDF         string `fixed:"30,34,left"`
+	EPUB        string `fixed:"35,39,left"`
+	EbookPrice  int    `fixed:"40,44"`
+}
+
 func StaticLengthData() {
 	s := `978-4-87311-865-9201909174620true true 3696
 978-4-87311-924-3202010102750falsefalse0000
@@ -724,5 +734,13 @@ func StaticLengthData() {
 			EbookPrice:  string(r[39:43]),
 		}
 		fmt.Printf("%+v\n", res)
+	}
+
+	for _, line := range strings.Split(s, "\n") {
+		var b Book2
+		if err := fixedwidth.Unmarshal([]byte(line), &b); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("%+v\n", b)
 	}
 }
