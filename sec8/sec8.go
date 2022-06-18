@@ -623,4 +623,33 @@ func Excel() {
 	if err := f.SaveAs("sec8/Book2.xlsx"); err != nil {
 		log.Fatal(err)
 	}
+
+	b1, err := excelize.OpenFile("sec8/Book2.xlsx")
+	if err != nil {
+		log.Fatal(err)
+	}
+	rows, err := b1.Rows("Sheet1")
+	if err != nil {
+		log.Fatal(err)
+	}
+	var countries []Country
+	for i := 0; rows.Next(); i++ {
+		row, err := rows.Columns()
+		if err != nil {
+			log.Fatal(err)
+		}
+		if i == 0 {
+			continue
+		}
+		population, err := strconv.Atoi(row[2])
+		if err != nil {
+			log.Fatal(err)
+		}
+		countries = append(countries, Country{
+			Name:       row[0],
+			ISOCode:    row[1],
+			Population: population,
+		})
+	}
+	fmt.Println(countries)
 }
