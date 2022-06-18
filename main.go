@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	sec8.Excel()
+	sec8.StaticLengthData()
 }
