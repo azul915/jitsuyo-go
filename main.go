@@ -1,9 +1,9 @@
 package main
 
 import (
-	"jitsuyo-go/sec8"
+	"jitsuyo-go/sec9"
 )
 
 func main() {
-	sec8.StaticLengthData()
+	sec9.Open()
 }
