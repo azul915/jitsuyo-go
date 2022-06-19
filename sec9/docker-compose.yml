@@ -2,6 +2,11 @@ version: '3.8'
 services:
   postgres:
     image: postgres:13.7
+    command: >
+      postgres -c log_destination=syslog
+      -c log_statement=all
+      -c log_connections=on
+      -c log_disconnections=on
     ports:
     - 5432:5432
     volumes:
