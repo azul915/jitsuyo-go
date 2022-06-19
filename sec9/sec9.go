@@ -3,7 +3,6 @@ package sec9
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"log"
 
 	_ "github.com/jackc/pgx/v4/stdlib"
@@ -20,5 +19,22 @@ func Open() {
 	if err := db.PingContext(ctx); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(db.Stats())
+
+	_, err = db.ExecContext(ctx, `
+	CREATE TABLE IF NOT EXISTS users (
+		user_id varchar(32) NOT NULL,
+		user_name varchar(100) NOT NULL,
+		created_at timestamp with time zone,
+		CONSTRAINT pk_users PRIMARY KEY (user_id)
+	)`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// _, err = db.ExecContext(ctx, `
+	// DROP TABLE IF EXISTS users;
+	// `)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 }
