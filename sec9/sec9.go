@@ -1,6 +1,7 @@
 package sec9
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
@@ -15,7 +16,8 @@ func Open() {
 	}
 	defer db.Close()
 
-	if err := db.Ping(); err != nil {
+	ctx := context.Background()
+	if err := db.PingContext(ctx); err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println(db.Stats())
