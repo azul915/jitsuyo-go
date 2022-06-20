@@ -101,6 +101,25 @@ func Open() {
 	}
 	fmt.Println(users)
 
+	var (
+		userName  string
+		createdAt time.Time
+		userID    = "0002"
+	)
+	row := db.QueryRowContext(ctx, `
+	SELECT user_name, created_at
+	FROM users
+	WHERE user_id = $1;
+	`, userID)
+	if err := row.Scan(&userName, &createdAt); err != nil {
+		log.Fatalf("query row(user_id=%s): %v\n", userID, err)
+	}
+	fmt.Println(User{
+		UserID:    userID,
+		UserName:  userName,
+		CreatedAt: createdAt,
+	})
+
 	// _, err = db.ExecContext(ctx, `
 	// DROP TABLE IF EXISTS users;
 	// `)
