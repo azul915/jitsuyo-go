@@ -141,6 +141,7 @@ func Open() {
 		UserName:  userName,
 		CreatedAt: createdAt,
 	})
+
 	// _, err = db.ExecContext(ctx, `
 	// DROP TABLE IF EXISTS users;
 	// `)
@@ -148,4 +149,24 @@ func Open() {
 	// 	log.Fatal(err)
 	// }
 
+}
+
+type Service struct {
+	db *sql.DB
+}
+
+func (s *Service) UpdateProduct(ctx context.Context, productID string) error {
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	if _, err = tx.ExecContext(ctx, `
+		UPDATE products
+		SET price = 200
+		WHERE product_id = $1;
+	`, productID); err != nil {
+		tx.Rollback()
+		return err
+	}
+	return tx.Commit()
 }
