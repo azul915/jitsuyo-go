@@ -42,7 +42,8 @@ func Open() {
 	if _, err := db.ExecContext(ctx, `
 	INSERT INTO users VALUES 
 	('0001','Gopher',current_timestamp),
-	('0002','Ferris',current_timestamp)
+	('0002','Ferris',current_timestamp),
+	('0003','Duke',null)
 	ON CONFLICT
 	ON CONSTRAINT pk_users
 	DO NOTHING;
@@ -120,6 +121,26 @@ func Open() {
 		CreatedAt: createdAt,
 	})
 
+	var (
+		createdAtOrNull sql.NullTime
+		dukeID          = "0003"
+	)
+	duke := db.QueryRowContext(ctx, `
+	SELECT user_name, created_at
+	FROM users
+	WHERE user_id = $1;
+	`, "0003")
+	if err := duke.Scan(&userName, &createdAtOrNull); err != nil {
+		log.Fatalf("query row(user_id=%s): %v\n", dukeID, err)
+	}
+	if !createdAtOrNull.Valid {
+		createdAt = time.Time{}
+	}
+	fmt.Println(User{
+		UserID:    dukeID,
+		UserName:  userName,
+		CreatedAt: createdAt,
+	})
 	// _, err = db.ExecContext(ctx, `
 	// DROP TABLE IF EXISTS users;
 	// `)
