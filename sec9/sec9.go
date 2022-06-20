@@ -172,3 +172,38 @@ func (s *Service) UpdateProduct(ctx context.Context, productID string) error {
 	}
 	return tx.Commit()
 }
+
+type txAdmin struct {
+	*sql.DB
+}
+
+type ProductService struct {
+	tx txAdmin
+}
+
+func (t *txAdmin) Transaction(ctx context.Context, f func(ctx context.Context) (err error)) error {
+	tx, err := t.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := f(ctx); err != nil {
+		return fmt.Errorf("transaction query failed: %w", err)
+	}
+	return tx.Commit()
+}
+
+func (p *ProductService) UpdateProduct(ctx context.Context, productID string) error {
+	updateFunc := func(ctx context.Context) error {
+		if _, err := p.tx.ExecContext(ctx, `
+		UPDATE products
+		SET price = 200
+		WHERE product_id = $1;
+	`, productID); err != nil {
+			return err
+		}
+		return nil
+	}
+	return p.tx.Transaction(ctx, updateFunc)
+}
