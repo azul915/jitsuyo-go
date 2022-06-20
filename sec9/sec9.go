@@ -160,6 +160,8 @@ func (s *Service) UpdateProduct(ctx context.Context, productID string) error {
 	if err != nil {
 		return err
 	}
+	defer tx.Rollback()
+
 	if _, err = tx.ExecContext(ctx, `
 		UPDATE products
 		SET price = 200
