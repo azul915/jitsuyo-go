@@ -3,7 +3,9 @@ package sec9
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"log"
+	"time"
 
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
@@ -20,12 +22,12 @@ func Open() {
 		log.Fatal(err)
 	}
 
-	// _, err = db.ExecContext(ctx, `
-	// DROP TABLE IF EXISTS users;
-	// `)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	_, err = db.ExecContext(ctx, `
+	DROP TABLE IF EXISTS users;
+	`)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	if _, err := db.ExecContext(ctx, `
 	CREATE TABLE IF NOT EXISTS users (
@@ -48,10 +50,62 @@ func Open() {
 		log.Fatal(err)
 	}
 
+	type User struct {
+		UserID    string
+		UserName  string
+		CreatedAt time.Time
+	}
+
+	rows, err := db.QueryContext(ctx, `
+	SELECT user_id, user_name, created_at
+	FROM users
+	ORDER BY user_id;
+	`)
+	if err != nil {
+		log.Fatalf("query all users: %v", err)
+	}
+	defer rows.Close()
+
+	// rows, _ = db.Query("SELECT COUNT(*) as count FROM users")
+	// var count int
+	// for rows.Next() {
+	// 	err := rows.Scan(&count)
+	// 	if err != nil {
+	// 		log.Fatal(err)
+	// 	}
+	// }
+	// fmt.Println(count)
+
+	var users []User
+	for rows.Next() {
+		var (
+			userID, userName string
+			createdAt        time.Time
+		)
+
+		if err := rows.Scan(&userID, &userName, &createdAt); err != nil {
+			log.Fatalf("scan the user: %v", err)
+		}
+		fmt.Printf("userID: %v, userName: %v, createdAt: %v\n", userID, userName, createdAt)
+		users = append(users, User{
+			UserID:    userID,
+			UserName:  userName,
+			CreatedAt: createdAt,
+		})
+		if err := rows.Close(); err != nil {
+			log.Fatalf("rows close: %v", err)
+		}
+		if err := rows.Err(); err != nil {
+			log.Fatalf("scan users: %v", err)
+		}
+	}
+	fmt.Println(users)
+
 	// _, err = db.ExecContext(ctx, `
 	// DROP TABLE IF EXISTS users;
 	// `)
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
+
 }
