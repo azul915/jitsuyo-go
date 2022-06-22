@@ -7,6 +7,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/jackc/pgx/v4"
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
@@ -206,4 +207,80 @@ func (p *ProductService) UpdateProduct(ctx context.Context, productID string) er
 		return nil
 	}
 	return p.tx.Transaction(ctx, updateFunc)
+}
+
+var _ pgx.Logger = (*logger)(nil)
+
+type logger struct{}
+
+func (l *logger) Log(ctx context.Context, level pgx.LogLevel, msg string, data map[string]interface{}) {
+	if msg == "Query" {
+		log.Printf("SQL:\n%v\nARGS:\n%v\n", data["sql"], data["args"])
+	}
+}
+
+func Logging() {
+	ctx := context.Background()
+	config, err := pgx.ParseConfig("user=user password=password host=localhost port=5432 dbname=db sslmode=disable")
+	if err != nil {
+		log.Fatal(err)
+	}
+	config.Logger = &logger{}
+
+	conn, err := pgx.ConnectConfig(ctx, config)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if _, err := conn.Exec(ctx, `
+	DROP TABLE IF EXISTS users;`); err != nil {
+		log.Fatal(err)
+	}
+
+	if _, err := conn.Exec(ctx, `
+	CREATE TABLE IF NOT EXISTS users (
+		user_id varchar(32) NOT NULL,
+		user_name varchar(100) NOT NULL,
+		created_at timestamp with time zone,
+		CONSTRAINT pk_users PRIMARY KEY (user_id)
+	)`); err != nil {
+		log.Fatal(err)
+	}
+
+	if _, err := conn.Exec(ctx, `
+	INSERT INTO users VALUES 
+	('0001','Gopher',current_timestamp),
+	('0002','Ferris',current_timestamp),
+	('0003','Duke',current_timestamp)
+	ON CONFLICT
+	ON CONSTRAINT pk_users
+	DO NOTHING;
+	`); err != nil {
+		log.Fatal(err)
+	}
+
+	sql := `SELECT schemaname, tablename FROM pg_tables WHERE schemaname = $1;`
+	args := "information_schema"
+	rows, err := conn.Query(ctx, sql, args)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	type PgTable struct {
+		SchemaName string
+		TableName  string
+	}
+	var pgtables []PgTable
+	for rows.Next() {
+		var s, t string
+		if err := rows.Scan(&s, &t); err != nil {
+			log.Fatal(err)
+		}
+		pgtables = append(pgtables, PgTable{SchemaName: s, TableName: t})
+	}
+	if err := rows.Err(); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Print(pgtables)
 }

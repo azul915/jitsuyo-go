@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	sec9.Open()
+	sec9.Logging()
 }
