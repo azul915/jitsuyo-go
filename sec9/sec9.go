@@ -419,13 +419,33 @@ func PreparedStatement() {
 
 }
 
-type User struct{}
+type User struct {
+	UserID   string
+	UserName string
+}
 
 func FetchUser(ctx context.Context, userID string) (*User, error) {
-	conn, err := pgx.Connect(ctx, "postgres://user:password@localhost:5432/db")
+	db, err := sql.Open("pgx", "host=localhost port=5432 user=user dbname=db password=password sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer conn.Close(ctx)
-	return &User{}, nil
+	defer db.Close()
+	row := db.QueryRowContext(ctx, `
+	SELECT user_id, user_name
+	FROM users
+	WHERE user_id = $1;`, userID)
+	user, err := scanUser(row)
+	if err != nil {
+		return nil, fmt.Errorf("scan user: %w", err)
+	}
+	return user, nil
+}
+
+func scanUser(row *sql.Row) (*User, error) {
+	var u User
+	err := row.Scan(&u.UserID, &u.UserName)
+	if err != nil {
+		return nil, fmt.Errorf("row scan: %w", err)
+	}
+	return &u, nil
 }
