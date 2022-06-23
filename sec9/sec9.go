@@ -418,3 +418,14 @@ func PreparedStatement() {
 	}
 
 }
+
+type User struct{}
+
+func FetchUser(ctx context.Context, userID string) (*User, error) {
+	conn, err := pgx.Connect(ctx, "postgres://user:password@localhost:5432/db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer conn.Close(ctx)
+	return &User{}, nil
+}

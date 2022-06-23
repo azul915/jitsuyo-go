@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"jitsuyo-go/sec9"
 )
 
 func main() {
-	sec9.PreparedStatement()
+	ctx := context.Background()
+	sec9.FetchUser(ctx, "")
 }
