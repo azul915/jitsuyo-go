@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/jackc/pgx/v4"
@@ -320,12 +321,9 @@ func PreparedStatement() {
 		UserName string
 	}
 	users := []User{
-		// {"0001", "Gopher"},
-		// {"0002", "Ferris"},
-		// {"0003", "Duke"},
-		{"Gopher", "001"},
-		{"Ferris", "002"},
-		{"Duke", "003"},
+		{"0001", "Gopher"},
+		{"0002", "Ferris"},
+		{"0003", "Duke"},
 	}
 
 	tx, err := db.BeginTx(ctx, nil)
@@ -353,6 +351,32 @@ func PreparedStatement() {
 		}
 	}
 	if err := tx.Commit(); err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = db.ExecContext(ctx, `
+	TRUNCATE TABLE users;
+	`)
+	if err != nil {
+		log.Fatal(err)
+	}
+	valueStrings := make([]string, 0, len(users))
+	valueArgs := make([]interface{}, 0, len(users)*2)
+	number := 1
+	for _, u := range users {
+		valueStrings = append(valueStrings, fmt.Sprintf("($%d, $%d)", number, number+1))
+		valueArgs = append(valueArgs, u.UserID)
+		valueArgs = append(valueArgs, u.UserName)
+		number += 2
+	}
+	fmt.Printf("valueStrings: %v\n", valueStrings)
+	query := fmt.Sprintf(`
+	INSERT INTO users (
+		user_id, user_name
+	) VALUES %s;
+	`, strings.Join(valueStrings, ","))
+	fmt.Printf("query: %v\n", query)
+	if _, err := db.ExecContext(ctx, query, valueArgs...); err != nil {
 		log.Fatal(err)
 	}
 }
