@@ -284,3 +284,75 @@ func Logging() {
 	}
 	fmt.Print(pgtables)
 }
+
+func PreparedStatement() {
+
+	db, err := sql.Open("pgx", "host=localhost port=5432 user=user dbname=db password=password sslmode=disable")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	ctx := context.Background()
+	if err := db.PingContext(ctx); err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = db.ExecContext(ctx, `
+	DROP TABLE IF EXISTS users;
+	`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if _, err := db.ExecContext(ctx, `
+	CREATE TABLE IF NOT EXISTS users (
+		user_id varchar(32) NOT NULL,
+		user_name varchar(100) NOT NULL,
+		created_at timestamp with time zone,
+		CONSTRAINT pk_users PRIMARY KEY (user_id)
+	)`); err != nil {
+		log.Fatal(err)
+	}
+
+	type User struct {
+		UserID   string
+		UserName string
+	}
+	users := []User{
+		// {"0001", "Gopher"},
+		// {"0002", "Ferris"},
+		// {"0003", "Duke"},
+		{"Gopher", "001"},
+		{"Ferris", "002"},
+		{"Duke", "003"},
+	}
+
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	stmt, err := tx.PrepareContext(ctx, `
+	INSERT INTO users(
+		user_id,
+		user_name,
+		created_at
+	) VALUES (
+		$1, $2, current_timestamp
+	);`)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+
+	for _, u := range users {
+		if _, err := stmt.ExecContext(ctx, u.UserID, u.UserName); err != nil {
+			log.Fatal(err)
+		}
+	}
+	if err := tx.Commit(); err != nil {
+		log.Fatal(err)
+	}
+}

@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	sec9.Logging()
+	sec9.PreparedStatement()
 }
