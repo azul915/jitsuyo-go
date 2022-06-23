@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/jackc/pgx/v4"
@@ -288,95 +287,134 @@ func Logging() {
 
 func PreparedStatement() {
 
-	db, err := sql.Open("pgx", "host=localhost port=5432 user=user dbname=db password=password sslmode=disable")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
+	// db, err := sql.Open("pgx", "host=localhost port=5432 user=user dbname=db password=password sslmode=disable")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer db.Close()
+
+	// ctx := context.Background()
+	// if err := db.PingContext(ctx); err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// _, err = db.ExecContext(ctx, `
+	// DROP TABLE IF EXISTS users;
+	// `)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// if _, err := db.ExecContext(ctx, `
+	// CREATE TABLE IF NOT EXISTS users (
+	// 	user_id varchar(32) NOT NULL,
+	// 	user_name varchar(100) NOT NULL,
+	// 	created_at timestamp with time zone,
+	// 	CONSTRAINT pk_users PRIMARY KEY (user_id)
+	// )`); err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// type User struct {
+	// 	UserID   string
+	// 	UserName string
+	// }
+	// users := []User{
+	// 	{"0001", "Gopher"},
+	// 	{"0002", "Ferris"},
+	// 	{"0003", "Duke"},
+	// }
+
+	// tx, err := db.BeginTx(ctx, nil)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// stmt, err := tx.PrepareContext(ctx, `
+	// INSERT INTO users(
+	// 	user_id,
+	// 	user_name,
+	// 	created_at
+	// ) VALUES (
+	// 	$1, $2, current_timestamp
+	// );`)
+
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer stmt.Close()
+
+	// for _, u := range users {
+	// 	if _, err := stmt.ExecContext(ctx, u.UserID, u.UserName); err != nil {
+	// 		log.Fatal(err)
+	// 	}
+	// }
+	// if err := tx.Commit(); err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// _, err = db.ExecContext(ctx, `
+	// TRUNCATE TABLE users;
+	// `)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// valueStrings := make([]string, 0, len(users))
+	// valueArgs := make([]interface{}, 0, len(users)*2)
+	// number := 1
+	// for _, u := range users {
+	// 	valueStrings = append(valueStrings, fmt.Sprintf("($%d, $%d)", number, number+1))
+	// 	valueArgs = append(valueArgs, u.UserID)
+	// 	valueArgs = append(valueArgs, u.UserName)
+	// 	number += 2
+	// }
+	// fmt.Printf("valueStrings: %v\n", valueStrings)
+	// query := fmt.Sprintf(`
+	// INSERT INTO users (
+	// 	user_id, user_name
+	// ) VALUES %s;
+	// `, strings.Join(valueStrings, ","))
+	// fmt.Printf("query: %v\n", query)
+	// if _, err := db.ExecContext(ctx, query, valueArgs...); err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// db.Close()
 
 	ctx := context.Background()
-	if err := db.PingContext(ctx); err != nil {
+	conn, err := pgx.Connect(ctx, "postgres://user:password@localhost:5432/db")
+	if err != nil {
 		log.Fatal(err)
 	}
-
-	_, err = db.ExecContext(ctx, `
-	DROP TABLE IF EXISTS users;
+	txn, err := conn.Begin(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = txn.Exec(ctx, `
+	DROP TABLE IF EXISTS products;
 	`)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if _, err := db.ExecContext(ctx, `
-	CREATE TABLE IF NOT EXISTS users (
-		user_id varchar(32) NOT NULL,
-		user_name varchar(100) NOT NULL,
-		created_at timestamp with time zone,
-		CONSTRAINT pk_users PRIMARY KEY (user_id)
-	)`); err != nil {
+	if _, err := txn.Exec(ctx, `
+	CREATE TABLE IF NOT EXISTS products (
+		product_no int2 NOT NULL,
+		name varchar(32) NOT NULL,
+		price int2 NOT NULL,
+		CONSTRAINT pk_products PRIMARY KEY (product_no)
+	);`); err != nil {
 		log.Fatal(err)
 	}
 
-	type User struct {
-		UserID   string
-		UserName string
+	rows := [][]interface{}{
+		{1, "おにぎり", 120},
+		{2, "パン", 300},
+		{3, "お茶", 100},
 	}
-	users := []User{
-		{"0001", "Gopher"},
-		{"0002", "Ferris"},
-		{"0003", "Duke"},
-	}
-
-	tx, err := db.BeginTx(ctx, nil)
+	_, err = txn.CopyFrom(ctx, pgx.Identifier{"products"}, []string{"product_no", "name", "price"}, pgx.CopyFromRows(rows))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	stmt, err := tx.PrepareContext(ctx, `
-	INSERT INTO users(
-		user_id,
-		user_name,
-		created_at
-	) VALUES (
-		$1, $2, current_timestamp
-	);`)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer stmt.Close()
-
-	for _, u := range users {
-		if _, err := stmt.ExecContext(ctx, u.UserID, u.UserName); err != nil {
-			log.Fatal(err)
-		}
-	}
-	if err := tx.Commit(); err != nil {
-		log.Fatal(err)
-	}
-
-	_, err = db.ExecContext(ctx, `
-	TRUNCATE TABLE users;
-	`)
-	if err != nil {
-		log.Fatal(err)
-	}
-	valueStrings := make([]string, 0, len(users))
-	valueArgs := make([]interface{}, 0, len(users)*2)
-	number := 1
-	for _, u := range users {
-		valueStrings = append(valueStrings, fmt.Sprintf("($%d, $%d)", number, number+1))
-		valueArgs = append(valueArgs, u.UserID)
-		valueArgs = append(valueArgs, u.UserName)
-		number += 2
-	}
-	fmt.Printf("valueStrings: %v\n", valueStrings)
-	query := fmt.Sprintf(`
-	INSERT INTO users (
-		user_id, user_name
-	) VALUES %s;
-	`, strings.Join(valueStrings, ","))
-	fmt.Printf("query: %v\n", query)
-	if _, err := db.ExecContext(ctx, query, valueArgs...); err != nil {
-		log.Fatal(err)
-	}
 }
