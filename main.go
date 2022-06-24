@@ -18,6 +18,10 @@ func (f *Foo) B() int {
 	return 0
 }
 
+func NewTest() Test {
+	return &Foo{}
+}
+
 func main() {
 	// ctx := context.Background()
 	// sec9.FetchUser(ctx, "")
@@ -25,8 +29,12 @@ func main() {
 }
 
 func prac() {
-	var t Test
-	t = &Foo{}
+	// var t Test
+	// t = &Foo{}
+	// fmt.Println(t.A())
+	// fmt.Println(t.B())
+
+	t := NewTest()
 	fmt.Println(t.A())
 	fmt.Println(t.B())
 }
