@@ -6,17 +6,19 @@ import (
 	"io/ioutil"
 	"reflect"
 	"testing"
+
+	_ "github.com/lib/pq"
 )
 
 func TestFetchUser(t *testing.T) {
 	connStr := "host=localhost port=5432 user=user dbname=db password=password sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
+	db, err := sql.Open("pgx", connStr)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer db.Close()
 
-	sqlBytes, err := ioutil.ReadFile("./sec9/schema.sql")
+	sqlBytes, err := ioutil.ReadFile("./schema.sql")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -34,14 +36,14 @@ func TestFetchUser(t *testing.T) {
 		{
 			name:         "1件取得",
 			userID:       "0001",
-			inputTestSQL: "",
+			inputTestSQL: "./testdata/input_user_1.sql",
 			want:         &User{"0001", "gopher1"},
 			hasErr:       false,
 		},
 		{
 			name:         "0件取得",
 			userID:       "9999",
-			inputTestSQL: "",
+			inputTestSQL: "./testdata/input_user_2.sql",
 			want:         nil,
 			hasErr:       true,
 		},
