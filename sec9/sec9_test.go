@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	_ "github.com/lib/pq"
 )
 
 // func TestFetchUser(t *testing.T) {
