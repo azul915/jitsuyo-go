@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"jitsuyo-go/sec10"
 )
 
 type Test interface {
@@ -23,9 +24,7 @@ func NewTest() Test {
 }
 
 func main() {
-	// ctx := context.Background()
-	// sec9.FetchUser(ctx, "")
-	prac()
+	sec10.Prac()
 }
 
 func prac() {
