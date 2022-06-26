@@ -3,7 +3,7 @@ package sec10
 import "net/http"
 
 func Prac() {
-	http.HandleFunc("/hello", http.HandlerFunc(Hello))
+	http.HandleFunc("/hello", Hello)
 	http.ListenAndServe(":3694", nil)
 }
 
