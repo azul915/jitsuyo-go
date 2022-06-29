@@ -1,6 +1,9 @@
 package sec10
 
-import "net/http"
+import (
+	"io"
+	"net/http"
+)
 
 func Prac() {
 	// http.HandleFunc("/hello", Hello)
@@ -15,5 +18,5 @@ func Hello(w http.ResponseWriter, r *http.Request) {
 type HelloStruct struct{}
 
 func (h HelloStruct) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello"))
+	io.WriteString(w, "hello world!")
 }
