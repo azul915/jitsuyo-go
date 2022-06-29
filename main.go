@@ -24,7 +24,7 @@ func NewTest() Test {
 }
 
 func main() {
-	sec10.Prac()
+	sec10.JsonPrac()
 }
 
 func prac() {
