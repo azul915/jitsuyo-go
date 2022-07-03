@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 
@@ -156,6 +157,35 @@ func Param() {
 		for k, v := range r.Form {
 			log.Printf("   %s: %s\n", k, v)
 		}
+	})
+
+	// touch index.rst && curl -F file=@index.rst -F data=other http://localhost:3694/file && rm index.rst
+	http.HandleFunc("/file", func(w http.ResponseWriter, r *http.Request) {
+		err := r.ParseMultipartForm(32 * 1024 * 1024)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		f, h, err := r.FormFile("file")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		log.Println(h.Filename)
+		o, err := os.Create(h.Filename)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		defer o.Close()
+		_, err = io.Copy(o, f)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		value := r.PostFormValue("data")
+		log.Printf(" value = %s", value)
 	})
 	http.ListenAndServe(":3694", nil)
 }
