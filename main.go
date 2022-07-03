@@ -24,7 +24,7 @@ func NewTest() Test {
 }
 
 func main() {
-	sec10.Param()
+	sec10.MultiPrexer()
 }
 
 func prac() {
