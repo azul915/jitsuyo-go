@@ -114,6 +114,7 @@ func JsonPrac() {
 }
 
 func MustCheck() {
+	// 必須チェックを行いたいフィールドをポインタ型で定義
 	type Book struct {
 		Title string `validate:"required"`
 		Price *int   `validate:"required"`
