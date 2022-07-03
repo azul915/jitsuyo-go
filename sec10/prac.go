@@ -116,7 +116,7 @@ func JsonPrac() {
 func MustCheck() {
 	type Book struct {
 		Title string `validate:"required"`
-		Price int    `validate:"required"`
+		Price *int   `validate:"required"`
 	}
 
 	s := `{"Title":"Real World HTTP ミニ版", "Price": 0}`
