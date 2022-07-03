@@ -24,7 +24,7 @@ func NewTest() Test {
 }
 
 func main() {
-	sec10.JsonPrac()
+	sec10.MustCheck()
 }
 
 func prac() {
