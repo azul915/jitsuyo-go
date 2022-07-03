@@ -135,3 +135,27 @@ func MustCheck() {
 		}
 	}
 }
+
+// curl -X GET -v -G -d "searchword=検索用語" -d other=value http://localhost:3694/params
+func Param() {
+	http.HandleFunc("/params", func(w http.ResponseWriter, r *http.Request) {
+		err := r.ParseForm()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		word := r.FormValue("searchword")
+		log.Printf("searchword: %s\n", word)
+
+		// _, ok = map[key]でkeyがmapに含まれるかどうかをboolで取れる
+		words, ok := r.Form["searchword"]
+		log.Printf("search word = %v has values %v\n", words, ok)
+
+		log.Print("all queries")
+		for k, v := range r.Form {
+			log.Printf("   %s: %s\n", k, v)
+		}
+	})
+	http.ListenAndServe(":3694", nil)
+}

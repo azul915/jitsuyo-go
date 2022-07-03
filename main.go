@@ -24,7 +24,7 @@ func NewTest() Test {
 }
 
 func main() {
-	sec10.MustCheck()
+	sec10.Param()
 }
 
 func prac() {
