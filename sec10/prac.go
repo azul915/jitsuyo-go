@@ -2,9 +2,11 @@ package sec10
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"sync"
 
 	"github.com/go-playground/validator/v10"
@@ -69,7 +71,32 @@ func JsonPrac() {
 			}
 			validate := validator.New()
 			if err := validate.Struct(c); err != nil {
-				http.Error(w, fmt.Sprintf(`{"status":"%s"}`, err), http.StatusBadRequest)
+				var out []string
+				var ve validator.ValidationErrors
+				if errors.As(err, &ve) {
+					for _, fe := range ve {
+						fmt.Printf("fe.ActualTag(): %v\n", fe.ActualTag())
+						fmt.Printf("fe.Error(): %v\n", fe.Error())
+						fmt.Printf("fe.Field(): %v\n", fe.Field())
+						fmt.Printf("fe.Kind(): %v\n", fe.Kind())
+						fmt.Printf("fe.Namespace(): %v\n", fe.Namespace())
+						fmt.Printf("fe.Param(): %v\n", fe.Param())
+						fmt.Printf("fe.StructField(): %v\n", fe.StructField())
+						fmt.Printf("fe.StructNamespace: %v\n", fe.StructNamespace())
+						fmt.Printf("fe.Tag(): %v\n", fe.Tag())
+						// fmt.Printf("fe.Translate(): %v\n", fe.Translate())
+						fmt.Printf("fe.Type(): %v\n", fe.Type())
+						fmt.Printf("fe.Value(): %v\n", fe.Value())
+						switch fe.Field() {
+						case "Message":
+							out = append(out, "Messageは1 ~ 140文字です")
+						case "UserName":
+							out = append(out, "UserNameは1 ~ 15文字です")
+						}
+					}
+				}
+				// http.Error(w, fmt.Sprintf(`{"status":"%s"}`, err), http.StatusBadRequest)
+				http.Error(w, fmt.Sprintf(`{"status":"%s"}`, strings.Join(out, ",")), http.StatusBadRequest)
 				return
 			}
 			mutex.Lock()
