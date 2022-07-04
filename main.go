@@ -24,7 +24,7 @@ func NewTest() Test {
 }
 
 func main() {
-	sec10.Chi()
+	sec10.BasicMiddleware()
 }
 
 func prac() {

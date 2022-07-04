@@ -234,3 +234,24 @@ func Chi() {
 	r.Handle("/asset/*", http.StripPrefix("/asset/", http.FileServer(http.Dir(""))))
 	log.Fatal(http.ListenAndServe(":3694", r))
 }
+
+func BasicMiddleware() {
+	// http.Handle("/healthz", http.HandlerFunc(healthz))
+	http.Handle("/healthz", MiddlewareLogging(http.HandlerFunc(healthz)))
+	http.ListenAndServe(":3694", nil)
+}
+
+func healthz(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("OK"))
+}
+
+// http.Handlerを関数の引数に受け取る
+// http.Handlerインターフェースを返す
+func MiddlewareLogging(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("start %s\n", r.URL)
+		next.ServeHTTP(w, r)
+		log.Printf("finish %s\n", r.URL)
+	})
+}
