@@ -11,6 +11,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -207,4 +208,29 @@ func MultiPrexer() {
 		fmt.Fprintf(w, "賛成: %d, 反対: %d", yes, no)
 	})
 	log.Fatal(http.ListenAndServe(":3694", mux))
+}
+
+// curl -X POST http://localhost:3694/poll/y
+// curl -X POST http://localhost:3694/poll/n
+// curl -X POST http://localhost:3694/poll/y
+// curl -X GET http://localhost:3694/result
+// 賛成: 2, 反対: 1
+func Chi() {
+	var (
+		yes = 0
+		no  = 0
+	)
+	r := chi.NewRouter()
+	r.Post("/poll/{answer}", func(w http.ResponseWriter, r *http.Request) {
+		if chi.URLParam(r, "answer") == "y" {
+			yes++
+		} else {
+			no++
+		}
+	})
+	r.Get("/result", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "賛成: %d, 反対: %d", yes, no)
+	})
+	r.Handle("/asset/*", http.StripPrefix("/asset/", http.FileServer(http.Dir(""))))
+	log.Fatal(http.ListenAndServe(":3694", r))
 }
