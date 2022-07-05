@@ -24,7 +24,7 @@ func NewTest() Test {
 }
 
 func main() {
-	sec10.BasicMiddleware()
+	sec10.IntentionalPanic()
 }
 
 func prac() {

@@ -291,3 +291,24 @@ func wrapHandlerWithLogging(wrappedHandler http.Handler) http.Handler {
 		log.Printf("%d %s", statusCode, http.StatusText(statusCode))
 	})
 }
+
+func Recovery(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		defer func() {
+			if err := recover(); err != nil {
+				log.Println(err)
+				w.WriteHeader(http.StatusInternalServerError)
+			}
+		}()
+		next.ServeHTTP(w, r)
+	})
+}
+
+func wrapPanic(w http.ResponseWriter, r *http.Request) {
+	panic("panic ocurred")
+}
+
+func IntentionalPanic() {
+	http.Handle("/panic", Recovery(http.HandlerFunc(wrapPanic)))
+	http.ListenAndServe(":3694", nil)
+}
