@@ -255,3 +255,39 @@ func MiddlewareLogging(next http.Handler) http.Handler {
 		log.Printf("finish %s\n", r.URL)
 	})
 }
+
+// type ResponseWriter interface {
+// 	Header() Header
+// 	Write([]byte) (int, error)
+// 	WriteHeader(statusCode int) (int, error)
+// }
+
+type loggingResponseWriter struct {
+	http.ResponseWriter
+	statusCode int
+}
+
+func NewLoggingResponseWriter(w http.ResponseWriter) *loggingResponseWriter {
+	return &loggingResponseWriter{}
+}
+
+func (lrw *loggingResponseWriter) WriteHeader(code int) {
+	lrw.statusCode = code
+	lrw.ResponseWriter.WriteHeader(code)
+}
+
+func (lrw *loggingResponseWriter) Write(b []byte) (int, error) {
+	if lrw.statusCode >= 400 {
+		log.Printf("Response Body: %s", b)
+	}
+	return lrw.ResponseWriter.Write(b)
+}
+
+func wrapHandlerWithLogging(wrappedHandler http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		lrw := NewLoggingResponseWriter(w)
+		wrappedHandler.ServeHTTP(w, r)
+		statusCode := lrw.statusCode
+		log.Printf("%d %s", statusCode, http.StatusText(statusCode))
+	})
+}
