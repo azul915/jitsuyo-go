@@ -1,6 +1,7 @@
 package sec10
 
 import (
+	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -13,6 +14,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
+	"golang.org/x/net/context"
 )
 
 func Prac() {
@@ -311,4 +313,24 @@ func wrapPanic(w http.ResponseWriter, r *http.Request) {
 func IntentionalPanic() {
 	http.Handle("/panic", Recovery(http.HandlerFunc(wrapPanic)))
 	http.ListenAndServe(":3694", nil)
+}
+
+func NewMiddlewareTx(db *sql.DB) func(http.Handler) http.Handler {
+	return func(wrappedHandler http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			tx, _ := db.Begin()
+			lrw := NewLoggingResponseWriter(w)
+			r = r.WithContext(context.WithValue(r.Context(), "tx", tx))
+			wrappedHandler.ServeHTTP(lrw, r)
+
+			statusCode := lrw.statusCode
+			if 200 < statusCode && statusCode < 400 {
+				log.Println("transaction committed")
+				tx.Commit()
+			} else {
+				log.Print("transaction rolling back due to status code: ", statusCode)
+				tx.Rollback()
+			}
+		})
+	}
 }
