@@ -11,6 +11,9 @@ import (
 	"os"
 	"strings"
 	"sync"
+	"time"
+
+	"golang.org/x/time/rate"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
@@ -339,4 +342,17 @@ func Timeout() {
 	h := MiddlewareLogging(http.HandlerFunc(Hello))
 	http.Handle("/healthz", http.TimeoutHandler(h, 5, "request timeout"))
 	http.ListenAndServe(":3694", nil)
+
+}
+
+var limiter = rate.NewLimiter(rate.Every(time.Second/1), 10)
+
+func LimitHandler(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if !limiter.Allow() {
+			http.Error(w, http.StatusText(429), http.StatusTooManyRequests)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
 }

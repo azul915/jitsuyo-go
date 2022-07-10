@@ -12,6 +12,8 @@ require (
 	github.com/jackc/pgx/v4 v4.16.1
 	github.com/xuri/excelize/v2 v2.6.0
 	go.uber.org/multierr v1.8.0
+	golang.org/x/net v0.0.0-20220520000938-2e3eb7b945c2
+	golang.org/x/time v0.0.0-20220609170525-579cf78fd858
 )
 
 require (
@@ -39,7 +41,6 @@ require (
 	github.com/xuri/nfp v0.0.0-20220409054826-5e722a1d9e22 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4 // indirect
-	golang.org/x/net v0.0.0-20220520000938-2e3eb7b945c2 // indirect
 	golang.org/x/sys v0.0.0-20220624220833-87e55d714810 // indirect
 	golang.org/x/text v0.3.7 // indirect
 )
