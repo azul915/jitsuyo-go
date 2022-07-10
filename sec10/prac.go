@@ -334,3 +334,9 @@ func NewMiddlewareTx(db *sql.DB) func(http.Handler) http.Handler {
 		})
 	}
 }
+
+func Timeout() {
+	h := MiddlewareLogging(http.HandlerFunc(Hello))
+	http.Handle("/healthz", http.TimeoutHandler(h, 5, "request timeout"))
+	http.ListenAndServe(":3694", nil)
+}

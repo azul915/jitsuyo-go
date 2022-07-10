@@ -24,7 +24,7 @@ func NewTest() Test {
 }
 
 func main() {
-	sec10.IntentionalPanic()
+	sec10.Timeout()
 }
 
 func prac() {
