@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"net/url"
 	"time"
 )
 
@@ -43,14 +42,11 @@ func Prac() {
 		Transport: http.DefaultTransport,
 	}
 
-	ru, err := url.ParseRequestURI("http://example.com")
+	nr, err := http.NewRequest(http.MethodGet, "http://example.com", nil)
 	if err != nil {
 		log.Fatal(err)
 	}
-	r, err := cl.Do(&http.Request{
-		Method: http.MethodGet,
-		URL:    ru,
-	})
+	r, err := cl.Do(nr)
 	if err != nil {
 		log.Fatal(err)
 	}
