@@ -2,6 +2,7 @@ package sec11
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -51,4 +52,18 @@ func Prac() {
 		log.Fatal(err)
 	}
 	r.Body.Close()
+
+	ctx := context.Background()
+	ncr, err := http.NewRequestWithContext(ctx, http.MethodGet, "http://example.com", nil)
+	if err != nil {
+		log.Fatal(err)
+
+	}
+	ncr.Header.Add("Authorization", "foobar")
+	rr, err := cl.Do(ncr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	rr.Body.Close()
+
 }
