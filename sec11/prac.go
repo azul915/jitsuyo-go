@@ -3,9 +3,10 @@ package sec11
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
+	"net/url"
+	"time"
 )
 
 func Prac() {
@@ -36,4 +37,22 @@ func Prac() {
 		log.Fatal(err)
 	}
 	res.Body.Close()
+
+	cl := &http.Client{
+		Timeout:   10 * time.Second,
+		Transport: http.DefaultTransport,
+	}
+
+	ru, err := url.ParseRequestURI("http://example.com")
+	if err != nil {
+		log.Fatal(err)
+	}
+	r, err := cl.Do(&http.Request{
+		Method: http.MethodGet,
+		URL:    ru,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	r.Body.Close()
 }
