@@ -45,3 +45,13 @@ func Prac() {
 		fmt.Println(v)
 	}
 }
+
+// func recv(r <-chan string) {
+// 	v := <-r
+// 	r <- "送信"// 送信はNG
+// }
+
+// func send(s chan<- string) {
+// 	s <-"送信OK"
+// 	v := <-s // 受信ダメ
+// }
