@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"jitsuyo-go/sec11"
+	"jitsuyo-go/sec16"
 )
 
 type Test interface {
@@ -24,7 +24,7 @@ func NewTest() Test {
 }
 
 func main() {
-	sec11.Prac()
+	sec16.Prac()
 }
 
 func prac() {
