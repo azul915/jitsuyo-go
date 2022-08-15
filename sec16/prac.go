@@ -13,4 +13,35 @@ func Prac() {
 		}(v)
 	}
 	time.Sleep(time.Second)
+
+	// バッファなしintチャネル作成
+	// ic := make(chan int)
+
+	// バッファありstringチャネル作成
+	// sc := make(chan string, 10)
+
+	// 送信
+	// ic <- 0
+	// sc <- "test"
+
+	// 受信
+	// 送信結果は捨てる
+	// <-sc
+
+	// 送信結果を変数に入れる
+	// r := <-sc
+
+	// 送信結果とチャネルの状態を変数に入れる
+	// r, ok := <-sc
+
+	ic := make(chan int)
+	go func() {
+		ic <- 10
+		ic <- 20
+		close(ic)
+	}()
+
+	for v := range ic {
+		fmt.Println(v)
+	}
 }
