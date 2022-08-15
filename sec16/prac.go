@@ -6,12 +6,11 @@ import (
 )
 
 func Prac() {
-	fmt.Println("ゴルーチンを実行します")
-	go func() {
-		fmt.Println("ゴルーチンが実行されています")
-	}()
-
-	fmt.Println("ゴルーチンの終了を待ちます")
+	items := []int{1, 2, 3, 4, 5, 6, 7, 8}
+	for _, v := range items {
+		go func() {
+			fmt.Printf("v = %d\n", v)
+		}()
+	}
 	time.Sleep(time.Second)
-	fmt.Println("ゴルーチンが終了しました")
 }
