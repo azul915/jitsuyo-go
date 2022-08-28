@@ -24,7 +24,8 @@ func NewTest() Test {
 }
 
 func main() {
-	sec16.Prac()
+	// sec16.Prac()
+	sec16.TotalFileSize()
 }
 
 func prac() {
